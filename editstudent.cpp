@@ -1,36 +1,88 @@
-/*void addnewstudent(listst &l, listpw &lpw)
+void editstudent(listst &l)
 {
-	student st;
-	cout << "Add new student to a class" << endl;
-	st.no = l.tail->data.no + 1;
-	cout << "Enter ID: ";
-	cin >> st.id;
-	cin.get();
-	cout << "Enter Lastname: ";
-	cin.getline(st.lastname, '/n');
-	cout << "Enter Firstname: ";
-	cin >> st.firstname;
-	do
+	char ID[100];
+	int check;
+	char temp[100];
+	cout << "Edit an existing student" << endl;
+	cout << "Input the student ID of the student";
+	cin >> ID;
+	nodest* head = l.head;
+	nodest*current = head;
+	while (current != l.tail)
 	{
-		cout << "Enter gender(Male/Female): ";
-		cin >> st.sex;
-	} while ((strcmp(st.sex, "Male") != 0 && strcmp(st.sex, "Female") != 0) && cout << "You can only enter Male/Female");
-	cout << "Enter day of DOB: ";
-	cin >> st.birth.day;
-	cout << "Enter month of DOB: ";
-	cin >> st.birth.month;
-	cout << "Enter year of DOB: ";
-	cin >> st.birth.year;
-	nodest*p = createNode(st);
-	insertTail(l, p);
-
-	password pa;
-	pa.no = st.no;
-	strcpy(pa.id, st.id);
-	strcpy(pa.user, st.id);
-	strcpy(pa.pass, st.birth.day);
-	strcat(pa.pass, st.birth.month);
-	strcat(pa.pass, st.birth.year);
-	nodepw*pw = createNode(pa);
-	insertTail(lpw, pw);
-}*/
+		if (strcmp(current->data.id, ID) == 0)
+		{
+			do
+			{
+				cout << "Please input the one you want to edit: " << endl;
+				cout << "1. Edit Student ID" << endl;
+				cout << "2. Edit Lastname" << endl;
+				cout << "3. Edit Firstname" << endl;
+				cout << "4. Edit Gender" << endl;
+				cout << "5. Edit D.O.B" << endl;
+				cout << "6. Done" << endl;
+				cin >> check;
+				switch (check)
+				{
+				case 1:
+				{
+					cout << "Input new Student ID: ";
+					cin >> temp;
+					strcpy(current->data.id, temp);
+					cout << "DONE" << endl;
+					break;
+				}
+				case 2:
+				{
+					cin.get();
+					cout << "Enter new Lastname: ";
+					cin.getline(temp, '/n');
+					strcpy(current->data.lastname, temp);
+					cout << "DONE" << endl;
+					break;
+				}
+				case 3:
+				{
+					cout << "Enter new Firstname: ";
+					cin >> temp;
+					strcpy(current->data.firstname, temp);
+					cout << "DONE" << endl;
+					break;
+				}
+				case 4:
+				{
+					do
+					{
+						cout << "Enter new gender(Male/Female): ";
+						cin >> temp;
+					} while ((strcmp(temp, "Male") != 0 && strcmp(temp, "Female") != 0) && cout << "Error!! Please try again!" << endl);
+					strcpy(current->data.sex, temp);
+					cout << "DONE" << endl;
+					break;
+				}
+				case 5:
+				{
+					cout << "Enter new day of D.O.B:";
+					cin >> temp;
+					strcpy(current->data.birth.day, temp);
+					cout << "Enter new month of D.O.B:";
+					cin >> temp;
+					strcpy(current->data.birth.month, temp);
+					cout << "Enter new year of D.O.B:";
+					cin >> temp;
+					strcpy(current->data.birth.year, temp);
+					cout << "DONE" << endl;
+					break;
+				}
+				case 6:
+				{
+					break;
+				}
+				default: cout << "You can only input from 1 to 6" << endl;
+				}
+			} while (check != 6);
+			return;
+		}
+		current = current->next;
+	}
+}
