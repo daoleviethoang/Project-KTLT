@@ -5,6 +5,103 @@
 #include <string.h>
 #include <cstdlib>
 using namespace std;
+struct date {
+	char day[100];
+	char month[100];
+	char year[100];
+};
+struct student {
+	int no;
+	char id[100];
+	char lastname[100];
+	char firstname[100];
+	char sex[100];
+	date birth;
+};
+struct time {
+	char hour[5];
+	char minute[5];
+};
+struct course
+{
+	int no;
+	char id[100];
+	char name[100];
+	char classn[100];
+	char lecture[100];
+	date start;
+	date end;
+	char day[100];
+	time start1;
+	time end1;
+	char room[100];
+};
+struct nodest
+{
+	student data;
+	nodest *next;
+};
+struct listst
+{
+	nodest *head;
+	nodest *tail;
+};
+struct nodecr
+{
+	course data;
+	nodecr *next;
+};
+struct listcr
+{
+	nodecr *head;
+	nodecr *tail;
+};
+void init(listst &l)
+{
+	l.head = l.tail = NULL;
+}
+void init(listcr &l)
+{
+	l.head = l.tail = NULL;
+}
+nodest *createNode(student x)
+{
+	nodest *p = new nodest;
+	p->next = NULL;
+	p->data = x;
+	return p;
+}
+nodecr *createNode(course x)
+{
+	nodecr *p = new nodecr;
+	p->next = NULL;
+	p->data = x;
+	return p;
+}
+void insertTail(listst &l, nodest *p)
+{
+	if (l.head == NULL)
+	{
+		l.head = l.tail = p;
+	}
+	else
+	{
+		l.tail->next = p;
+		l.tail = p;
+	}
+}
+void insertTail(listcr &l, nodecr *p)
+{
+	if (l.head == NULL)
+	{
+		l.head = l.tail = p;
+	}
+	else
+	{
+		l.tail->next = p;
+		l.tail = p;
+	}
+}
 struct password
 {
 	int no;
@@ -108,7 +205,102 @@ void staffmenu()
 		staffmenu();
 	}
 }
+bool loadStudent(const char *path, listst &l, char b[])
+{
+	ifstream fin;
+	fin.open(path);
+	if (fin.fail())
+		return false;
+	init(l);
+	student st;
+	fin.getline(b, 200, '\n');
+	while (fin >> st.no)
+	{
+		fin.get();
+		fin.getline(st.id, 9, ',');
+		fin.getline(st.lastname, 101, ',');
+		fin.getline(st.firstname, 101, ',');
+		fin.getline(st.sex, 10, ',');
+		fin.getline(st.birth.month, 5, '-');
+		fin.getline(st.birth.day, 5, '-');
+		fin.getline(st.birth.year, 5, '\n');
+		nodest *p = createNode(st);
+		insertTail(l, p);
+	}
+	fin.close();
+	return true;
+}
+bool saveStudent(const char *path, listst &l, char b[])
+{
+	ofstream fout;
+	fout.open(path);
+	if (fout.fail())
+		return false;
+	fout << b << endl;
+	for (nodest *p = l.head; p != NULL; p = p->next)
+	{
+		student st = p->data;
+		if (st.no < 0) break;
+		fout << st.no << "," << st.id << "," << st.lastname << "," << st.firstname << "," << st.sex << "," << st.birth.month << "/" << st.birth.day << "/" << st.birth.year << endl;
+	}
+	fout.close();
+	return true;
+}
 
+bool loadCourse(const char *path, listcr &l, char b[])
+{
+	ifstream fin;
+	fin.open(path);
+	if (fin.fail())
+		return false;
+	init(l);
+	fin.getline(b, 200, '\n');
+	course cr;
+	while (fin >> cr.no)
+	{
+		fin.get();
+		fin.getline(cr.id, 10, ',');
+		fin.getline(cr.name, 100, ',');
+		fin.getline(cr.classn, 7, ',');
+		fin.getline(cr.lecture, 100, ',');
+		fin.getline(cr.start.day, 5, '/');
+		fin.getline(cr.start.month, 5, '/');
+		fin.getline(cr.start.year, 5, ',');
+		fin.getline(cr.end.day, 5, '/');
+		fin.getline(cr.end.month, 5, '/');
+		fin.getline(cr.end.year, 5, ',');
+		fin.getline(cr.day, 10, ',');
+		fin.getline(cr.start1.hour, 3, ':');
+		fin.getline(cr.start1.minute, 3, ',');
+		fin.getline(cr.end1.hour, 6, ':');
+		fin.getline(cr.end1.minute, 6, ',');
+		fin.getline(cr.room, 10, '\n');
+		nodecr *p = createNode(cr);
+		insertTail(l, p);
+	}
+	fin.close();
+	return true;
+}
+
+bool saveCourse(const char *path, listcr &l, char b[])
+{
+	ofstream fout;
+	fout.open(path);
+
+	if (fout.fail())
+		return false;
+
+	int i = 0;
+	fout << b << endl;
+	for (nodecr *p = l.head; p != NULL; p = p->next)
+	{
+		course cr = p->data;
+		if (cr.no < 0) break;
+		fout << cr.no << "," << cr.id << "," << cr.name << "," << cr.classn << "," << cr.lecture << "," << cr.start.month << "/" << cr.start.day << "/" << cr.start.year << ',' << cr.end.month << "/" << cr.end.day << "/" << cr.end.year << ',' << cr.day << ',' << cr.start1.hour << ':' << cr.start1.minute << ',' << cr.end1.hour << ':' << cr.end1.minute << ',' << cr.room << endl;
+	}
+	fout.close();
+	return true;
+}
 void lecturermenu()
 {
 	cout << "Lecturemenu: " << endl;
@@ -119,7 +311,7 @@ void lecturermenu()
 	int s;
 	cout << "Let's choose the function you want: " << endl;
 	cin >> s;
-	switch (s)
+	switch (s)	
 	{
 	case 1: {break; };
 	case 2: {break; };
@@ -135,6 +327,9 @@ void lecturermenu()
 
 void studentmenu(listpw pw)
 {
+
+
+
 	cout << "Studentmenu: " << endl;
 	cout << "1: study" << endl;
 	cout << "2: dohomework" << endl;
@@ -286,17 +481,40 @@ void menu(listpw pw)
 
 void main()
 {
-	listpw l;
-	char b[100];
-	int k = loadPassword("D:/password.csv", l, b);
+	listpw pw;
+	listst st;
+	listcr cr;
+	char a[200];
+	char b[200];
+	char c[100];
+	int k = loadPassword("D:/password.csv", pw, a);
+	int h = loadStudent("D:/18CLC1.csv", st, b);
+	int z = loadCourse("D:/CoursesCLC1.csv", cr, c);
 	if (k)
 	{
-		menu(l);
-		k = savePassword("D:/outputCLC1.csv", l, b);
+		menu(pw);
+		k = savePassword("D:/outputCLC1.csv", pw, a);
 		if (k)
 		{
-			cout << "Load and save file success full" << endl;
+			cout << "Load Password file success full" << endl;
 		}
 	}
+	if (h)
+	{
+		h = saveStudent("D:/outputCLC1.csv", st, b);
+		if (h)
+		{
+			cout << "Load Student file success full" << endl;
+		}
+	}
+	if (z)
+	{
+		z = saveCourse("D:/outputcourseCLC1.csv", cr, c);
+		if (z)
+		{
+			cout << "Load Course file success full" << endl;
+		}
+	}
+	else cout << "Can not load data";
 	_getch();
 }
