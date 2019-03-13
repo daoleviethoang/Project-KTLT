@@ -314,6 +314,32 @@ void addnewstudent(listst &l, listpw &lpw)
 	nodepw*pw = createNode(pa);
 	insertTail(lpw, pw);
 }
+void inputpassword(char password[])
+{
+	int i = 0;
+	for (char c; (c = _getch());)
+	{
+		if (c == '\n' || c == '\r') 
+		{
+            cout << "\n";
+            break;
+        } else if (c == '\b') 
+		{
+            cout << "\b \b";
+			if (i != 0)
+				password[i-1] = NULL;
+			i++;
+        } else if (c == -32) 
+		{
+            _getch();
+        } else if (isprint(c))
+		{
+            cout << '*';
+            password[i++] = c;
+        }
+	}
+	password[i] = NULL;
+}
 void editstudent(listst &l)
 {
 	char ID[100];
@@ -557,9 +583,9 @@ void changePassword(listpw &l, char user[50], char password[50])
 			do
 			{
 				cout << "Enter new password: ";
-				cin >> a;
+				inputpassword(a);
 				cout << "Enter new password again: ";
-				cin >> b;
+				inputpassword(b);
 				if (strcmp(a, b) == 0)
 				{
 					nodepw*p = l.head;
@@ -599,7 +625,7 @@ int login(listpw pw, char y[], listst st)
 		cout << "username: ";
 		cin >> user;
 		cout << "password: ";
-		cin >> password;
+		inputpassword(password);
 		if (temp == 1)
 		{
 			nodepw *lpw = pw.head;
