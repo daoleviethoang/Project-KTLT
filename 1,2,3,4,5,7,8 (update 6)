@@ -177,7 +177,7 @@ bool savePassword(const char *path, listpw &l)
 	{
 		password pw = p->data;
 		if (pw.no < 0) break;
-		fout << pw.no << ","<< pw.id << ","<< pw.user << "," << pw.pass <<endl;
+		fout << pw.no << "," << pw.id << "," << pw.user << "," << pw.pass << endl;
 	}
 	fout.close();
 	return true;
@@ -319,24 +319,27 @@ void inputpassword(char password[])
 	int i = 0;
 	for (char c; (c = _getch());)
 	{
-		if (c == '\n' || c == '\r') 
+		if (c == '\n' || c == '\r')
 		{
-            cout << "\n";
-            break;
-        } else if (c == '\b') 
+			cout << "\n";
+			break;
+		}
+		else if (c == '\b')
 		{
-            cout << "\b \b";
+			cout << "\b \b";
 			if (i != 0)
-				password[i-1] = NULL;
+				password[i - 1] = NULL;
 			i++;
-        } else if (c == -32) 
+		}
+		else if (c == -32)
 		{
-            _getch();
-        } else if (isprint(c))
+			_getch();
+		}
+		else if (isprint(c))
 		{
-            cout << '*';
-            password[i++] = c;
-        }
+			cout << '*';
+			password[i++] = c;
+		}
 	}
 	password[i] = NULL;
 }
@@ -446,28 +449,28 @@ void classmenu(listst &st, listpw &pw)
 	cin >> s;
 	switch (s)
 	{
-	case 1: 
+	case 1:
 	{
-//		cout << "Enter the path of the file to load: ";
-//		cin >> import;
-//		cout << endl;
-//		loadStudent(import, st, savest);
-		break; 
+		//		cout << "Enter the path of the file to load: ";
+		//		cin >> import;
+		//		cout << endl;
+		//		loadStudent(import, st, savest);
+		break;
 	};
-	case 2: 
+	case 2:
 	{
 		addnewstudent(st, pw);
-		saveStudent("D:/outputCLC1.csv",st, savest);
+		saveStudent("D:/outputCLC1.csv", st, savest);
 		savePassword("D:/Password.csv", pw);
 		cout << "Add new student success full" << endl;
-		break; 
+		break;
 	};
-	case 3: 
+	case 3:
 	{
 		editstudent(st);
 		saveStudent("D:/outputCLC1.csv", st, savest);
 		cout << "Edit an exitsing student success full" << endl;
-		break; 
+		break;
 	};
 	case 4: {break; };
 	case 5: {break; };
@@ -494,10 +497,10 @@ void staffmenu(listst &st, listpw &pw)
 	cin >> s;
 	switch (s)
 	{
-	case 1: 
+	case 1:
 	{
 		classmenu(st, pw);
-		break; 
+		break;
 	};
 	case 2: {break; };
 	case 3: {break; };
@@ -520,7 +523,7 @@ void lecturermenu()
 	int s;
 	cout << "Let's choose the function you want: " << endl;
 	cin >> s;
-	switch (s)	
+	switch (s)
 	{
 	case 1: {break; };
 	case 2: {break; };
@@ -612,14 +615,14 @@ int login(listpw pw, char y[], listst st)
 	int index = 0;
 	int temp = 0;
 	cout << "Select: " << endl;
-		do
-		{
-			cout << "1: Login" << endl;
-			cout << "2: Change Password" << endl;
-			cin >> temp;
-		} while (temp > 2);
-		do
-		{
+	do
+	{
+		cout << "1: Login" << endl;
+		cout << "2: Change Password" << endl;
+		cin >> temp;
+	} while (temp > 2);
+	do
+	{
 		if (index == 1) cout << "Please, Enter again" << endl;
 		index = 0;
 		cout << "username: ";
@@ -705,10 +708,10 @@ void main()
 	char c[200];
 	//for (Node *lp = l.head; lp != NULL; lp = lp->next)
 //	{
-		int k = loadPassword("D:/Password.csv", pw, a);
-		int h = loadStudent("D:/18CLC1.csv", st, b);
-		int z = loadCourse("D:/CoursesCLC1.csv", cr, c);
-//	}
+	int k = loadPassword("D:/Password.csv", pw, a);
+	int h = loadStudent("D:/18CLC1.csv", st, b);
+	int z = loadCourse("D:/CoursesCLC1.csv", cr, c);
+	//	}
 	if (h)
 	{
 		h = saveStudent("D:/outputCLC1.csv", st, b);
