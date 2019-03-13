@@ -198,8 +198,8 @@ bool loadStudent(const char *path, listst &l, char b[])
 		fin.getline(st.lastname, 101, ',');
 		fin.getline(st.firstname, 101, ',');
 		fin.getline(st.sex, 10, ',');
-		fin.getline(st.birth.month, 5, '-');
-		fin.getline(st.birth.day, 5, '-');
+		fin.getline(st.birth.month, 5, '/');
+		fin.getline(st.birth.day, 5, '/');
 		fin.getline(st.birth.year, 5, '\n');
 		nodest *p = createNode(st);
 		insertTail(l, p);
@@ -278,7 +278,184 @@ bool saveCourse(const char *path, listcr &l, char b[])
 	fout.close();
 	return true;
 }
-void staffmenu()
+void addnewstudent(listst &l, listpw &lpw)
+{
+	student st;
+	cout << "Add new student to a class" << endl;
+	st.no = l.tail->data.no + 1;
+	cout << "Enter ID: ";
+	cin >> st.id;
+	cin.get();
+	cout << "Enter Lastname: ";
+	cin.getline(st.lastname, '/n');
+	cout << "Enter Firstname: ";
+	cin >> st.firstname;
+	do
+	{
+		cout << "Enter gender(Male/Female): ";
+		cin >> st.sex;
+	} while ((strcmp(st.sex, "Male") != 0 && strcmp(st.sex, "Female") != 0) && cout << "You can only enter Male/Female");
+	cout << "Enter day of DOB: ";
+	cin >> st.birth.day;
+	cout << "Enter month of DOB: ";
+	cin >> st.birth.month;
+	cout << "Enter year of DOB: ";
+	cin >> st.birth.year;
+	nodest*p = createNode(st);
+	insertTail(l, p);
+
+	password pa;
+	pa.no = st.no;
+	strcpy(pa.id, st.id);
+	strcpy(pa.user, st.id);
+	strcpy(pa.pass, st.birth.day);
+	strcat(pa.pass, st.birth.month);
+	strcat(pa.pass, st.birth.year);
+	nodepw*pw = createNode(pa);
+	insertTail(lpw, pw);
+}
+void editstudent(listst &l)
+{
+	char ID[100];
+	int check;
+	char temp[100];
+	cout << "Edit an existing student" << endl;
+	cout << "Input the student ID of the student: ";
+	cin >> ID;
+	nodest* head = l.head;
+	nodest*current = head;
+	while (current != l.tail)
+	{
+		if (strcmp(current->data.id, ID) == 0)
+		{
+			do
+			{
+				cout << "Please input the one you want to edit: " << endl;
+				cout << "1. Edit Student ID" << endl;
+				cout << "2. Edit Lastname" << endl;
+				cout << "3. Edit Firstname" << endl;
+				cout << "4. Edit Gender" << endl;
+				cout << "5. Edit D.O.B" << endl;
+				cout << "6. Done" << endl;
+				cin >> check;
+				switch (check)
+				{
+				case 1:
+				{
+					cout << "Input new Student ID: ";
+					cin >> temp;
+					strcpy(current->data.id, temp);
+					cout << "DONE" << endl;
+					break;
+				}
+				case 2:
+				{
+					cin.get();
+					cout << "Enter new Lastname: ";
+					cin.getline(temp, '/n');
+					strcpy(current->data.lastname, temp);
+					cout << "DONE" << endl;
+					break;
+				}
+				case 3:
+				{
+					cout << "Enter new Firstname: ";
+					cin >> temp;
+					strcpy(current->data.firstname, temp);
+					cout << "DONE" << endl;
+					break;
+				}
+				case 4:
+				{
+					do
+					{
+						cout << "Enter new gender(Male/Female): ";
+						cin >> temp;
+					} while ((strcmp(temp, "Male") != 0 && strcmp(temp, "Female") != 0) && cout << "Error!! Please try again!" << endl);
+					strcpy(current->data.sex, temp);
+					cout << "DONE" << endl;
+					break;
+				}
+				case 5:
+				{
+					cout << "Enter new day of D.O.B:";
+					cin >> temp;
+					strcpy(current->data.birth.day, temp);
+					cout << "Enter new month of D.O.B:";
+					cin >> temp;
+					strcpy(current->data.birth.month, temp);
+					cout << "Enter new year of D.O.B:";
+					cin >> temp;
+					strcpy(current->data.birth.year, temp);
+					cout << "DONE" << endl;
+					break;
+				}
+				case 6:
+				{
+					break;
+				}
+				default: cout << "You can only input from 1 to 6" << endl;
+				}
+			} while (check != 6);
+			return;
+		}
+		current = current->next;
+	}
+}
+void classmenu(listst &st, listpw &pw)
+{
+	cout << "Class:" << endl;
+	cout << "1: Import students of a class" << endl;
+	cout << "2: Add a new student" << endl;
+	cout << "3: Edit an exitsing student" << endl;
+	cout << "4: Remove astudent" << endl;
+	cout << "5: Change student of a classes" << endl;
+	cout << "6: View list of classes" << endl;
+	cout << "7: View list of student in a class" << endl;
+	int s;
+	char savest[100];
+	char savepw[100];
+	char import[100];
+	cout << "Let's choose request you want: " << endl;
+	cin >> s;
+	switch (s)
+	{
+	case 1: 
+	{
+//		cout << "Enter the path of the file to load: ";
+//		cin >> import;
+//		cout << endl;
+//		loadStudent(import, st, savest);
+		break; 
+	};
+	case 2: 
+	{
+		addnewstudent(st, pw);
+		saveStudent("D:/outputCLC1.csv",st, savest);
+		savePassword("D:/Password.csv", pw);
+		cout << "Add new student success full" << endl;
+		break; 
+	};
+	case 3: 
+	{
+		editstudent(st);
+		saveStudent("D:/outputCLC1.csv", st, savest);
+		cout << "Edit an exitsing student success full" << endl;
+		break; 
+	};
+	case 4: {break; };
+	case 5: {break; };
+	case 6: {break; };
+	case 7: {break; };
+	default:
+		system("cls");
+		cout << "Incorrect,please enter again! " << endl;
+		system("cls");
+		classmenu(st, pw);
+		break;
+	}
+}
+void staffmenu(listst &st, listpw &pw)
 {
 	cout << "Staffmenu: " << endl;
 	cout << "1: class" << endl;
@@ -291,7 +468,11 @@ void staffmenu()
 	cin >> s;
 	switch (s)
 	{
-	case 1: {break; };
+	case 1: 
+	{
+		classmenu(st, pw);
+		break; 
+	};
 	case 2: {break; };
 	case 3: {break; };
 	case 4: {break; };
@@ -300,7 +481,7 @@ void staffmenu()
 		system("cls");
 		cout << "Incorrect,please enter again! " << endl;
 		system("cls");
-		staffmenu();
+		staffmenu(st, pw);
 	}
 }
 void lecturermenu()
@@ -456,7 +637,7 @@ void menu(listpw pw, listst st)
 		if (x1 == 1)
 		{
 			system("cls");
-			staffmenu();
+			staffmenu(st, pw);
 
 		}
 		if (x1 == 2)
@@ -495,10 +676,13 @@ void main()
 	listcr cr;
 	char a[200];
 	char b[200];
-	char c[100];
-	int k = loadPassword("D:/password.csv", pw, a);
-	int h = loadStudent("D:/18CLC1.csv", st, b);
-	int z = loadCourse("D:/CoursesCLC1.csv", cr, c);
+	char c[200];
+	//for (Node *lp = l.head; lp != NULL; lp = lp->next)
+//	{
+		int k = loadPassword("D:/Password.csv", pw, a);
+		int h = loadStudent("D:/18CLC1.csv", st, b);
+		int z = loadCourse("D:/CoursesCLC1.csv", cr, c);
+//	}
 	if (h)
 	{
 		h = saveStudent("D:/outputCLC1.csv", st, b);
@@ -516,7 +700,6 @@ void main()
 		}
 	}
 	else cout << "Can not load data";
-	menu(pw, st);
 	if (k)
 	{
 		k = savePassword("D:/outputCLC1.csv", pw);
@@ -525,5 +708,6 @@ void main()
 			cout << "Load Password file success full" << endl;
 		}
 	}
+	menu(pw, st);
 	_getch();
 }
