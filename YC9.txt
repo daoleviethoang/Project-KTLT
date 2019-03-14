@@ -1,0 +1,39 @@
+void removestudent(listst &l)
+{
+	char id[11];
+	cout<<"Please enter ID you want to delete: ";
+	cin.getline(id,12,'\n');
+	nodest *h=l.head;
+	if (strcmp(h->data.id,id)==0)
+	{
+		h=h->next;
+		delete l.head;
+		l.head=h;
+		return;
+	}
+	while (h->next)
+		if (h->next->next!=NULL)
+			if (strcmp(h->next->data.id,id)==0)
+			{
+				nodest *g=h->next;
+				h->next=h->next->next;
+				delete g;
+				return;
+			}
+			else
+			{
+				h=h->next;
+			}
+		else
+			if (strcmp(h->next->data.id,id)==0)
+			{
+				nodest *g=h->next;
+				h->next=NULL;
+				delete g;
+				return;
+			}
+			else
+			{
+				h=h->next;
+			}
+}
