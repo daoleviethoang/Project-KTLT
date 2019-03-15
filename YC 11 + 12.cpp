@@ -21,7 +21,7 @@ void viewlist(listst l1, listst l2, listst l3, listst l4, listst l5, listst l6)
 			{
 				student st = p->data;
 				if (st.no < 0) break;
-				fout << st.no << "," << st.id << "," << st.lastname << "," << st.firstname << "," << st.sex << "," << st.birth.month << "/" << st.birth.day << "/" << st.birth.year << endl;
+				cout << st.no << "," << st.id << "," << st.lastname << "," << st.firstname << "," << st.sex << "," << st.birth.month << "/" << st.birth.day << "/" << st.birth.year << endl;
 			}
 		}
 		case 2:
@@ -31,7 +31,7 @@ void viewlist(listst l1, listst l2, listst l3, listst l4, listst l5, listst l6)
 			{
 				student st = p->data;
 				if (st.no < 0) break;
-				fout << st.no << "," << st.id << "," << st.lastname << "," << st.firstname << "," << st.sex << "," << st.birth.month << "/" << st.birth.day << "/" << st.birth.year << endl;
+				cout << st.no << "," << st.id << "," << st.lastname << "," << st.firstname << "," << st.sex << "," << st.birth.month << "/" << st.birth.day << "/" << st.birth.year << endl;
 			}
 		}
 		case 3:
@@ -41,7 +41,7 @@ void viewlist(listst l1, listst l2, listst l3, listst l4, listst l5, listst l6)
 			{
 				student st = p->data;
 				if (st.no < 0) break;
-				fout << st.no << "," << st.id << "," << st.lastname << "," << st.firstname << "," << st.sex << "," << st.birth.month << "/" << st.birth.day << "/" << st.birth.year << endl;
+				cout << st.no << "," << st.id << "," << st.lastname << "," << st.firstname << "," << st.sex << "," << st.birth.month << "/" << st.birth.day << "/" << st.birth.year << endl;
 			}
 		}
 		case 4:
@@ -51,7 +51,7 @@ void viewlist(listst l1, listst l2, listst l3, listst l4, listst l5, listst l6)
 			{
 				student st = p->data;
 				if (st.no < 0) break;
-				fout << st.no << "," << st.id << "," << st.lastname << "," << st.firstname << "," << st.sex << "," << st.birth.month << "/" << st.birth.day << "/" << st.birth.year << endl;
+				cout << st.no << "," << st.id << "," << st.lastname << "," << st.firstname << "," << st.sex << "," << st.birth.month << "/" << st.birth.day << "/" << st.birth.year << endl;
 			}
 		}
 		case 5:
@@ -61,7 +61,7 @@ void viewlist(listst l1, listst l2, listst l3, listst l4, listst l5, listst l6)
 			{
 				student st = p->data;
 				if (st.no < 0) break;
-				fout << st.no << "," << st.id << "," << st.lastname << "," << st.firstname << "," << st.sex << "," << st.birth.month << "/" << st.birth.day << "/" << st.birth.year << endl;
+				cout << st.no << "," << st.id << "," << st.lastname << "," << st.firstname << "," << st.sex << "," << st.birth.month << "/" << st.birth.day << "/" << st.birth.year << endl;
 			}
 		}
 		case 6:
@@ -71,7 +71,7 @@ void viewlist(listst l1, listst l2, listst l3, listst l4, listst l5, listst l6)
 			{
 				student st = p->data;
 				if (st.no < 0) break;
-				fout << st.no << "," << st.id << "," << st.lastname << "," << st.firstname << "," << st.sex << "," << st.birth.month << "/" << st.birth.day << "/" << st.birth.year << endl;
+				cout << st.no << "," << st.id << "," << st.lastname << "," << st.firstname << "," << st.sex << "," << st.birth.month << "/" << st.birth.day << "/" << st.birth.year << endl;
 			}
 		}
 		case 7:
