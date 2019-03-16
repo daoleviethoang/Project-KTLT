@@ -36,4 +36,5 @@ void removestudent(listst &l)
 			{
 				h=h->next;
 			}
+		cout<<"Have no this ID, pls enter again!"<<endl;
 }
