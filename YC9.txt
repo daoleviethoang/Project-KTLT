@@ -1,6 +1,8 @@
 void removestudent(listst &l)
 {
 	char id[11];
+	do
+	{
 	cout<<"Please enter ID you want to delete: ";
 	cin.getline(id,12,'\n');
 	nodest *h=l.head;
@@ -36,5 +38,6 @@ void removestudent(listst &l)
 			{
 				h=h->next;
 			}
-		cout<<"Have no this ID, pls enter again!"<<endl;
+		
+	} while(cout<<"Have no this ID, pls enter again!"<<endl);
 }
