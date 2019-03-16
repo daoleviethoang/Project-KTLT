@@ -1,0 +1,176 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <fstream>
+#include <conio.h>
+#include <string.h>
+#include <cstdlib>
+using namespace std;
+struct date {
+	char day[100];
+	char month[100];
+	char year[100];
+};
+struct student {
+	int no;
+	char id[100];
+	char lastname[100];
+	char firstname[100];
+	char sex[100];
+	date birth;
+};
+struct nodest
+{
+	student data;
+	nodest *next;
+};
+struct listst
+{
+	nodest *head;
+	nodest *tail;
+};
+struct nameall
+{
+	char name[100];
+};
+struct nodeallst
+{
+	nameall data;
+	nodeallst *next;
+};
+struct listallst
+{
+	nodeallst *head;
+	nodeallst *tail;
+};
+void init(listst &l)
+{
+	l.head = l.tail = NULL;
+}
+void init(listallst &l)
+{
+	l.head = l.tail = NULL;
+}
+nodest *createNode(student x)
+{
+	nodest *p = new nodest;
+	p->next = NULL;
+	p->data = x;
+	return p;
+}
+nodeallst *createNode(nameall x)
+{
+	nodeallst *p = new nodeallst;
+	p->next = NULL;
+	p->data = x;
+	return p;
+}
+void insertTail(listst &l, nodest *p)
+{
+	if (l.head == NULL)
+	{
+		l.head = l.tail = p;
+	}
+	else
+	{
+		l.tail->next = p;
+		l.tail = p;
+	}
+}
+void insertTail(listallst &l, nodeallst *p)
+{
+	if (l.head == NULL)
+	{
+		l.head = l.tail = p;
+	}
+	else
+	{
+		l.tail->next = p;
+		l.tail = p;
+	}
+}
+bool loadAllStudent(listallst &last)
+{
+	ifstream fin;
+	fin.open("AllStudents.csv");
+	if (fin.fail())
+		return false;
+	nameall nall;
+	init(last);
+	while (fin.getline(nall.name , 30, '\n'))
+	{
+		nodeallst *p = createNode(nall);
+		insertTail(last, p);
+	}
+	fin.close();
+	return true;
+}
+void loadStudent(nodeallst*t, listst &lst)
+{
+	ifstream fin;
+	fin.open(t->data.name);
+	char b[100];
+	init(lst);
+	student st;
+	fin.getline(b, 50, '\n');
+	while (fin >> st.no)
+	{
+		fin.get();
+		fin.getline(st.id, 9, ',');
+		fin.getline(st.lastname, 101, ',');
+		fin.getline(st.firstname, 101, ',');
+		fin.getline(st.sex, 10, ',');
+		fin.getline(st.birth.month, 5, '/');
+		fin.getline(st.birth.day, 5, '/');
+		fin.getline(st.birth.year, 5, '\n');
+		nodest *p = createNode(st);
+		insertTail(lst, p);
+	}
+	fin.close();
+	return;
+}
+void saveStudent(const char *path, listst &lst)
+{
+	ofstream fout;
+	fout.open(path);
+	char b[100];
+	fout << "No,Student ID,Lastname,Firstname,Gender,DoB" << endl;
+		for (nodest *p = lst.head; p != NULL; p = p->next)
+		{
+			student st = p->data;
+			if (st.no < 0) break;
+			fout << st.no << "," << st.id << "," << st.lastname << "," << st.firstname << "," << st.sex << "," << st.birth.month << "/" << st.birth.day << "/" << st.birth.year << endl;
+		}
+	fout.close();
+}
+bool loadall(listst &lst, listallst &last)
+{
+	loadAllStudent(last);
+	ifstream fin;
+	fin.open("SaveAllStudent.csv");
+	if (!fin.is_open() && loadAllStudent(last) == false)
+		return false;
+	char load[300];
+	char save[100];
+	nameall x;
+	for(nodeallst *p = last.head; p!= NULL; p = p ->next)
+	{
+		loadStudent(p, lst);
+		fin.getline(save, 30, '\n');
+		saveStudent(save, lst);
+	}
+	fin.close();
+	return true;
+}
+void main()
+{
+	listst lst;
+	listallst last;
+	nameall x;
+	int h = loadall(lst, last);
+	if (h)
+	{
+		cout << "Load and save file successfull";
+	}
+	else cout << "Can't load data";
+	_getch();
+}
