@@ -96,7 +96,7 @@ bool loadAllStudent(listallst &last)
 		return false;
 	nameall nall;
 	init(last);
-	while (fin.getline(nall.name , 30, '\n'))
+	while (fin.getline(nall.name, 30, '\n'))
 	{
 		nodeallst *p = createNode(nall);
 		insertTail(last, p);
@@ -134,15 +134,15 @@ void saveStudent(const char *path, listst &lst)
 	fout.open(path);
 	char b[100];
 	fout << "No,Student ID,Lastname,Firstname,Gender,DoB" << endl;
-		for (nodest *p = lst.head; p != NULL; p = p->next)
-		{
-			student st = p->data;
-			if (st.no < 0) break;
-			fout << st.no << "," << st.id << "," << st.lastname << "," << st.firstname << "," << st.sex << "," << st.birth.month << "/" << st.birth.day << "/" << st.birth.year << endl;
-		}
+	for (nodest *p = lst.head; p != NULL; p = p->next)
+	{
+		student st = p->data;
+		if (st.no < 0) break;
+		fout << st.no << "," << st.id << "," << st.lastname << "," << st.firstname << "," << st.sex << "," << st.birth.month << "/" << st.birth.day << "/" << st.birth.year << endl;
+	}
 	fout.close();
 }
-bool loadall(listst &lst, listallst &last)
+bool loadall(listst*&lst, listallst &last)
 {
 	loadAllStudent(last);
 	ifstream fin;
@@ -152,24 +152,38 @@ bool loadall(listst &lst, listallst &last)
 	char load[300];
 	char save[100];
 	nameall x;
-	for(nodeallst *p = last.head; p!= NULL; p = p ->next)
+	int i = 0;
+	for (nodeallst *p = last.head; p != NULL; p = p->next)
 	{
-		loadStudent(p, lst);
+		loadStudent(p, lst[i]);
 		fin.getline(save, 30, '\n');
-		saveStudent(save, lst);
+		saveStudent(save, lst[i]);
+		i++;
 	}
 	fin.close();
 	return true;
 }
 void main()
 {
-	listst lst;
+	int size = 6;
+	listst*lst = new listst [size];
+	for (int i = 0; i < size; i++)
+	{
+		init(lst[i]);
+	}
 	listallst last;
 	nameall x;
 	int h = loadall(lst, last);
 	if (h)
 	{
-		cout << "Load and save file successfull";
+		cout << "Load and save file successfull" << endl;
+		//Khuc nay de test nha!!!!!!
+		cout << lst[0].head->data.firstname << endl;
+		cout << lst[1].head->data.firstname << endl;
+		cout << lst[2].head->data.firstname << endl;
+		cout << lst[3].head->data.firstname << endl;
+		cout << lst[4].head->data.firstname << endl;
+		cout << lst[5].head->data.firstname << endl;
 	}
 	else cout << "Can't load data";
 	_getch();
