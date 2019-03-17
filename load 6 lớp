@@ -88,6 +88,18 @@ void insertTail(listallst &l, nodeallst *p)
 		l.tail = p;
 	}
 }
+int listn()
+{
+	ifstream fin;
+	fin.open("AllStudents.csv");
+	char a[100];
+	int n = 0;
+	while (fin.getline(a, 30, '\n'))
+	{
+		n++;
+	}
+	return n;
+}
 bool loadAllStudent(listallst &last)
 {
 	ifstream fin;
@@ -165,7 +177,7 @@ bool loadall(listst*&lst, listallst &last)
 }
 void main()
 {
-	int size = 6;
+	int size = listn();
 	listst*lst = new listst [size];
 	for (int i = 0; i < size; i++)
 	{
@@ -177,7 +189,6 @@ void main()
 	if (h)
 	{
 		cout << "Load and save file successfull" << endl;
-		//Khuc nay de test nha!!!!!!
 		cout << lst[0].head->data.firstname << endl;
 		cout << lst[1].head->data.firstname << endl;
 		cout << lst[2].head->data.firstname << endl;
