@@ -63,6 +63,7 @@ struct listst
 	nodest *head;
 	nodest *tail;
 };
+
 struct nodecr
 {
 	course data;
