@@ -1,88 +1,43 @@
-/*void editstudent(listst &l)
+void moveStudent(listst*&lst)
 {
-	char ID[100];
-	int check;
-	char temp[100];
-	cout << "Edit an existing student" << endl;
-	cout << "Input the student ID of the student";
+	char ID[10];
+	int cla;
+	int cla1;
+	nodest*temp = new nodest;
+	cout << "Input the student ID you want to move to another class: ";
 	cin >> ID;
-	nodest* head = l.head;
-	nodest*current = head;
-	while (current != l.tail)
+	do
 	{
-		if (strcmp(current->data.id, ID) == 0)
+		cout << "Enter the class of that student(1. 18CLC1 -> 6. 18CLC6): ";
+		cin >> cla;
+	} while (cla > 6 && cla < 1 && cout << "We only have 6 classes!" << endl);
+	int i = cla - 1;
+	for (nodest *p = lst[i].head; p->next != NULL; p = p->next)
+	{
+		if (strcmp(p->next->data.id, ID) == 0)
 		{
-			do
+			cout << "Found student with ID " << ID << " in the class!" << endl;
+			temp = p->next;
+			p->next = p->next->next;
+			while (p->next != NULL)
 			{
-				cout << "Please input the one you want to edit: " << endl;
-				cout << "1. Edit Student ID" << endl;
-				cout << "2. Edit Lastname" << endl;
-				cout << "3. Edit Firstname" << endl;
-				cout << "4. Edit Gender" << endl;
-				cout << "5. Edit D.O.B" << endl;
-				cout << "6. Done" << endl;
-				cin >> check;
-				switch (check)
-				{
-				case 1:
-				{
-					cout << "Input new Student ID: ";
-					cin >> temp;
-					strcpy(current->data.id, temp);
-					cout << "DONE" << endl;
-					break;
-				}
-				case 2:
-				{
-					cin.get();
-					cout << "Enter new Lastname: ";
-					cin.getline(temp, '/n');
-					strcpy(current->data.lastname, temp);
-					cout << "DONE" << endl;
-					break;
-				}
-				case 3:
-				{
-					cout << "Enter new Firstname: ";
-					cin >> temp;
-					strcpy(current->data.firstname, temp);
-					cout << "DONE" << endl;
-					break;
-				}
-				case 4:
-				{
-					do
-					{
-						cout << "Enter new gender(Male/Female): ";
-						cin >> temp;
-					} while ((strcmp(temp, "Male") != 0 && strcmp(temp, "Female") != 0) && cout << "Error!! Please try again!" << endl);
-					strcpy(current->data.sex, temp);
-					cout << "DONE" << endl;
-					break;
-				}
-				case 5:
-				{
-					cout << "Enter new day of D.O.B:";
-					cin >> temp;
-					strcpy(current->data.birth.day, temp);
-					cout << "Enter new month of D.O.B:";
-					cin >> temp;
-					strcpy(current->data.birth.month, temp);
-					cout << "Enter new year of D.O.B:";
-					cin >> temp;
-					strcpy(current->data.birth.year, temp);
-					cout << "DONE" << endl;
-					break;
-				}
-				case 6:
-				{
-					break;
-				}
-				default: cout << "You can only input from 1 to 6" << endl;
-				}
-			} while (check != 6);
-			return;
+				p->next->data.no -= 1;
+				p = p->next;
+			}
+			break;
 		}
-		current = current->next;
+		if (p->next->next == NULL)
+		{
+			cout << "Can't find student with ID " << ID << " in the class!" << endl;
+			moveStudent(lst);
+		}
 	}
-}*/
+	do
+	{
+		cout << "Enter the class you want that student to move to(1. 18CLC1 -> 6. 18CLC6): ";
+		cin >> cla1;
+	} while (cla1 > 6 && cla1 < 1 && cout << "We only have 6 classes!" << endl);
+	temp->data.no = lst[cla - 1].tail->data.no + 1;
+	insertTail(lst[cla - 1], temp);
+	saveStudent("Test.txt", lst[cla - 1]);
+}
