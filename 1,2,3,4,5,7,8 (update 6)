@@ -73,6 +73,38 @@ struct listcr
 	nodecr *head;
 	nodecr *tail;
 };
+struct nameall
+{
+	char name[100];
+};
+struct savenameall
+{
+	char savename[100];
+};
+struct nodeallstsave
+{
+	savenameall data;
+	nodeallstsave *next;
+};
+struct nodeallst
+{
+	nameall data;
+	nodeallst *next;
+};
+struct listallst
+{
+	nodeallst *head;
+	nodeallst *tail;
+};
+struct listallstsave
+{
+	nodeallstsave *head;
+	nodeallstsave *tail;
+};
+void init(listallst &l)
+{
+	l.head = l.tail = NULL;
+}
 void init(listpw &l)
 {
 	l.head = l.tail = NULL;
@@ -84,6 +116,24 @@ void init(listst &l)
 void init(listcr &l)
 {
 	l.head = l.tail = NULL;
+}
+void init(listallstsave &l)
+{
+	l.head = l.tail = NULL;
+}
+nodeallst *createNode(nameall x)
+{
+	nodeallst *p = new nodeallst;
+	p->next = NULL;
+	p->data = x;
+	return p;
+}
+nodeallstsave *createNode(savenameall x)
+{
+	nodeallstsave *p = new nodeallstsave;
+	p->next = NULL;
+	p->data = x;
+	return p;
 }
 nodepw *createNode(password x)
 {
@@ -106,7 +156,7 @@ nodecr *createNode(course x)
 	p->data = x;
 	return p;
 }
-void insertTail(listst &l, nodest *p)
+void insertTail(listallst &l, nodeallst *p)
 {
 	if (l.head == NULL)
 	{
@@ -116,6 +166,30 @@ void insertTail(listst &l, nodest *p)
 	{
 		l.tail->next = p;
 		l.tail = p;
+	}
+}
+void insertTail(listallstsave &l, nodeallstsave *p)
+{
+	if (l.head == NULL)
+	{
+		l.head = l.tail = p;
+	}
+	else
+	{
+		l.tail->next = p;
+		l.tail = p;
+	}
+}
+void insertTail(listst &lst, nodest *p)
+{
+	if (lst.head == NULL)
+	{
+		lst.head = lst.tail = p;
+	}
+	else
+	{
+		lst.tail->next = p;
+		lst.tail = p;
 	}
 }
 void insertTail(listcr &l, nodecr *p)
@@ -131,7 +205,7 @@ void insertTail(listcr &l, nodecr *p)
 	}
 }
 int login(listpw pw, char y[], listst st);
-void menu(listpw pw, listst st); /*-------------------------*/
+void menu(listallst &last, listst *&lst, listpw &pw, int &i);/////////////////////
 
 void insertTail(listpw &l, nodepw *p)
 {
@@ -182,15 +256,46 @@ bool savePassword(const char *path, listpw &l)
 	fout.close();
 	return true;
 }
-bool loadStudent(const char *path, listst &l, char b[])
+bool loadAllStudentSave(listallstsave &lasts)
 {
 	ifstream fin;
-	fin.open(path);
+	fin.open("SaveAllStudent.csv");
 	if (fin.fail())
 		return false;
-	init(l);
+	savenameall sna;
+	init(lasts);
+	while (fin.getline(sna.savename, 30, '\n'))
+	{
+		nodeallstsave *p = createNode(sna);
+		insertTail(lasts, p);
+	}
+	fin.close();
+	return true;
+}
+bool loadAllStudent(listallst &last)
+{
+	ifstream fin;
+	fin.open("AllStudents.csv");
+	if (fin.fail())
+		return false;
+	nameall nall;
+	init(last);
+	while (fin.getline(nall.name, 30, '\n'))
+	{
+		nodeallst *p = createNode(nall);
+		insertTail(last, p);
+	}
+	fin.close();
+	return true;
+}
+void loadStudent(nodeallst*t, listst &lst)
+{
+	ifstream fin;
+	fin.open(t->data.name);
+	char b[100];
+	init(lst);
 	student st;
-	fin.getline(b, 200, '\n');
+	fin.getline(b, 50, '\n');
 	while (fin >> st.no)
 	{
 		fin.get();
@@ -202,25 +307,44 @@ bool loadStudent(const char *path, listst &l, char b[])
 		fin.getline(st.birth.day, 5, '/');
 		fin.getline(st.birth.year, 5, '\n');
 		nodest *p = createNode(st);
-		insertTail(l, p);
+		insertTail(lst, p);
 	}
 	fin.close();
-	return true;
+	return;
 }
-bool saveStudent(const char *path, listst &l, char b[])
+void saveStudent(const char *path, listst &lst)
 {
 	ofstream fout;
 	fout.open(path);
-	if (fout.fail())
-		return false;
-	fout << b << endl;
-	for (nodest *p = l.head; p != NULL; p = p->next)
+	char b[100];
+	fout << "No,Student ID,Lastname,Firstname,Gender,DoB" << endl;
+	for (nodest *p = lst.head; p != NULL; p = p->next)
 	{
 		student st = p->data;
 		if (st.no < 0) break;
 		fout << st.no << "," << st.id << "," << st.lastname << "," << st.firstname << "," << st.sex << "," << st.birth.month << "/" << st.birth.day << "/" << st.birth.year << endl;
 	}
 	fout.close();
+}
+bool loadall(listst*&lst, listallst &last)
+{
+	loadAllStudent(last);
+	ifstream fin;
+	fin.open("SaveAllStudent.csv");
+	if (!fin.is_open() && loadAllStudent(last) == false)
+		return false;
+	char load[300];
+	char save[100];
+	nameall x;
+	int i = 0;
+	for (nodeallst *p = last.head; p != NULL; p = p->next)
+	{
+		loadStudent(p, lst[i]);
+		fin.getline(save, 30, '\n');
+		saveStudent(save, lst[i]);
+		i++;
+	}
+	fin.close();
 	return true;
 }
 
@@ -278,11 +402,11 @@ bool saveCourse(const char *path, listcr &l, char b[])
 	fout.close();
 	return true;
 }
-void addnewstudent(listst &l, listpw &lpw)
+void addnewstudent(listst &lst, listpw &lpw, int i)
 {
 	student st;
 	cout << "Add new student to a class" << endl;
-	st.no = l.tail->data.no + 1;
+	st.no = lst.tail->data.no + 1;
 	cout << "Enter ID: ";
 	cin >> st.id;
 	cin.get();
@@ -302,7 +426,7 @@ void addnewstudent(listst &l, listpw &lpw)
 	cout << "Enter year of DOB: ";
 	cin >> st.birth.year;
 	nodest*p = createNode(st);
-	insertTail(l, p);
+	insertTail(lst, p);
 
 	password pa;
 	pa.no = st.no;
@@ -314,6 +438,15 @@ void addnewstudent(listst &l, listpw &lpw)
 	nodepw*pw = createNode(pa);
 	insertTail(lpw, pw);
 }
+/*void importClass(listallst &last,listst &lst, listpw &pw, listallstsave &lasts,nameall a, savenameall b)
+{
+	cout << "Import student of a class from a csv file" << endl;
+	nodeallst *p = createNode(a);
+	insertTail(last, p);
+	nodeallstsave *t = createNode(b);
+	insertTail(lasts, t);
+	loadAllStudentSave(lasts.tail->data)
+}*/
 void inputpassword(char password[])
 {
 	int i = 0;
@@ -343,17 +476,13 @@ void inputpassword(char password[])
 	}
 	password[i] = NULL;
 }
-void editstudent(listst &l)
+bool editstudent(listst &lst, char ID[])
 {
-	char ID[100];
 	int check;
 	char temp[100];
-	cout << "Edit an existing student" << endl;
-	cout << "Input the student ID of the student: ";
-	cin >> ID;
-	nodest* head = l.head;
+	nodest* head = lst.head;
 	nodest*current = head;
-	while (current != l.tail)
+	while (current != lst.tail)
 	{
 		if (strcmp(current->data.id, ID) == 0)
 		{
@@ -426,12 +555,43 @@ void editstudent(listst &l)
 				default: cout << "You can only input from 1 to 6" << endl;
 				}
 			} while (check != 6);
-			return;
+			return true;
 		}
 		current = current->next;
 	}
 }
-void classmenu(listst &st, listpw &pw)
+bool outputClass(listallst &last)
+{
+	ifstream fin;
+	fin.open("AllStudents.csv");
+	if (fin.fail())
+		return false;
+	nameall nall;
+	int i = 1;
+	init(last);
+	while (fin.getline(nall.name, 30, '\n'))
+	{
+		nodeallst *p = createNode(nall);
+		insertTail(last, p);
+		cout<< " "<< i <<" : " << nall.name << endl;
+		i++;
+	}
+	fin.close();
+	return true;
+}
+int listn()
+{
+	ifstream fin;
+	fin.open("AllStudents.csv");
+	char a[100];
+	int n = 0;
+	while (fin.getline(a, 30, '\n'))
+	{
+		n++;
+	}
+	return n;
+}
+void classmenu(listallst &last, listst *&lst, listpw &pw, int i)
 {
 	cout << "Class:" << endl;
 	cout << "1: Import students of a class" << endl;
@@ -451,24 +611,39 @@ void classmenu(listst &st, listpw &pw)
 	{
 	case 1:
 	{
-		//		cout << "Enter the path of the file to load: ";
-		//		cin >> import;
-		//		cout << endl;
-		//		loadStudent(import, st, savest);
+		
 		break;
 	};
 	case 2:
 	{
-		addnewstudent(st, pw);
-		saveStudent("D:/outputCLC1.csv", st, savest);
+		char a[30];
+		outputClass(last);
+		cout << "Choose class: ";
+		cin >> i;
+		addnewstudent(lst[i], pw, i);
+		cout << "Choose save class (suggest: 18CLC"<< i <<"SaveStudent.csv): ";
+		cin >> a;
+		saveStudent(a, lst[i]);
 		savePassword("D:/Password.csv", pw);
 		cout << "Add new student success full" << endl;
 		break;
 	};
 	case 3:
 	{
-		editstudent(st);
-		saveStudent("D:/outputCLC1.csv", st, savest);
+		char ID[100];
+		char a[30];
+		cout << "Edit an existing student" << endl;
+		cout << "Input the student ID of the student: ";
+		cin >> ID;
+		for (int i = 0; i < listn(); i++)
+		{
+			if (editstudent(lst[i], ID))
+			{
+				cout << "Choose save class (suggest: 18CLC" << i << "SaveStudent.csv): ";
+				cin >> a;
+				saveStudent(a, lst[i]);
+			}
+		}
 		cout << "Edit an exitsing student success full" << endl;
 		break;
 	};
@@ -480,11 +655,11 @@ void classmenu(listst &st, listpw &pw)
 		system("cls");
 		cout << "Incorrect,please enter again! " << endl;
 		system("cls");
-		classmenu(st, pw);
+		classmenu(last, lst, pw, i);
 		break;
 	}
 }
-void staffmenu(listst &st, listpw &pw)
+void staffmenu(listallst &last, listst *&lst, listpw &pw, int i)
 {
 	cout << "Staffmenu: " << endl;
 	cout << "1: class" << endl;
@@ -499,7 +674,7 @@ void staffmenu(listst &st, listpw &pw)
 	{
 	case 1:
 	{
-		classmenu(st, pw);
+		classmenu(last,lst, pw,i);
 		break;
 	};
 	case 2: {break; };
@@ -510,7 +685,7 @@ void staffmenu(listst &st, listpw &pw)
 		system("cls");
 		cout << "Incorrect,please enter again! " << endl;
 		system("cls");
-		staffmenu(st, pw);
+		staffmenu(last, lst, pw, i);
 	}
 }
 void lecturermenu()
@@ -537,41 +712,51 @@ void lecturermenu()
 	}
 }
 
-void studentmenu(listpw pw, char y[], listst st)
+void studentmenu(listpw &pw, char y[], listst *&lst, listallst &last, int i)
 {
-	for (nodest *p = st.head; p != NULL; p = p->next)
+	int check = 0;
+	for (int i = 0; i < listn(); i++)
 	{
-		if (strcmp(y, p->data.id) == 0)
-			cout << p->data.no << endl << p->data.id
-			<< endl << p->data.lastname << " "
-			<< p->data.firstname << endl << p->data.sex
-			<< endl << p->data.birth.month << "/"
-			<< p->data.birth.day << "/" << p->data.birth.year << endl;
+		for (nodest *p = lst[i].head; p != NULL; p = p->next)
+		{
+			if (strcmp(y, p->data.id) == 0)
+			{
+				cout << p->data.no << endl << p->data.id
+					<< endl << p->data.lastname << " "
+					<< p->data.firstname << endl << p->data.sex
+					<< endl << p->data.birth.month << "/"
+					<< p->data.birth.day << "/" << p->data.birth.year << endl;
+				check = 1;
+			}
+		}
+		if (check == 1)
+		{
+			cout << "Studentmenu: " << endl;
+			cout << "1: study" << endl;
+			cout << "2: dohomework" << endl;
+			cout << "3: preparelesson" << endl;
+			cout << "4: logout" << endl;
+			int s;
+			cout << "Let's choose the function you want: " << endl;
+			cin >> s;
+			switch (s)
+			{
+			case 1: {break; };
+			case 2: {break; };
+			case 3: {break; };
+			case 4: {
+				menu(last, lst, pw, i);
+				break; };
+
+			default:
+				system("cls");
+				cout << "Incorrect,please enter again! " << endl;
+
+				studentmenu(pw, y, lst, last, i);
+			}
+			break;
+		}
 	}
-	cout << "Studentmenu: " << endl;
-	cout << "1: study" << endl;
-	cout << "2: dohomework" << endl;
-	cout << "3: preparelesson" << endl;
-	cout << "4: logout" << endl;
-	int s;
-	cout << "Let's choose the function you want: " << endl;
-	cin >> s;
-	switch (s)
-	{
-	case 1: {break; };
-	case 2: {break; };
-	case 3: {break; };
-	case 4: {
-		menu(pw, st);
-		break; };
-
-	default:
-		system("cls");
-		cout << "Incorrect,please enter again! " << endl;
-
-		studentmenu(pw, y, st);
-	}
-
 }
 void changePassword(listpw &l, char user[50], char password[50])
 {
@@ -608,7 +793,7 @@ void changePassword(listpw &l, char user[50], char password[50])
 	} while ((strcmp(check, password) != 0) && cout << "Wrong!! Please do it again!" << endl);
 }
 
-int login(listpw pw, char y[], listst st)
+int login(listpw pw, char y[])
 {
 	char user[9];
 	char password[50];
@@ -651,7 +836,7 @@ int login(listpw pw, char y[], listst st)
 		else changePassword(pw, user, password);
 	} while (index == 1);
 }
-void menu(listpw pw, listst st)
+void menu(listallst &last, listst *&lst, listpw &pw, int &i)
 {
 	cout << "1: login" << endl;
 	cout << "2: exit" << endl;
@@ -662,11 +847,11 @@ void menu(listpw pw, listst st)
 	char y[11];
 	if (x == 1)
 	{
-		x1 = login(pw, y, st);
+		x1 = login(pw, y);
 		if (x1 == 1)
 		{
 			system("cls");
-			staffmenu(st, pw);
+			staffmenu(last, lst, pw, i);
 
 		}
 		if (x1 == 2)
@@ -678,8 +863,7 @@ void menu(listpw pw, listst st)
 		if (x1 == 3)
 		{
 			system("cls");
-			studentmenu(pw, y, st);
-
+			studentmenu(pw, y, lst, last , i);
 		}
 	}
 	else if (x == 2)
@@ -694,49 +878,45 @@ void menu(listpw pw, listst st)
 		system("cls");
 		cout << "Invalid,please enter again!" << endl;
 
-		menu(pw, st);
+		menu(last, lst, pw, i);
 	}
 }
 
 void main()
 {
 	listpw pw;
-	listst st;
 	listcr cr;
 	char a[200];
-	char b[200];
-	char c[200];
-	//for (Node *lp = l.head; lp != NULL; lp = lp->next)
-//	{
-	int k = loadPassword("D:/Password.csv", pw, a);
-	int h = loadStudent("D:/18CLC1.csv", st, b);
-	int z = loadCourse("D:/CoursesCLC1.csv", cr, c);
-	//	}
-	if (h)
+	int size = listn();
+	listst*lst = new listst[size];
+	for (int i = 0; i < size; i++)
 	{
-		h = saveStudent("D:/outputCLC1.csv", st, b);
-		if (h)
-		{
-			cout << "Load Student file success full" << endl;
-		}
+		init(lst[i]);
 	}
-	if (z)
-	{
-		z = saveCourse("D:/outputcourseCLC1.csv", cr, c);
-		if (z)
-		{
-			cout << "Load Course file success full" << endl;
-		}
-	}
-	else cout << "Can not load data";
+	listallst last;
+	int k = loadPassword("Password.csv", pw, a);
 	if (k)
 	{
-		k = savePassword("D:/outputCLC1.csv", pw);
+		k = savePassword("SavePassword.csv", pw);
 		if (k)
 		{
 			cout << "Load Password file success full" << endl;
 		}
 	}
-	menu(pw, st);
+	int h = loadall(lst, last);
+	if (h)
+	{
+		cout << "Load and save file successfull" << endl;
+		//Khuc nay de test nha!!!!!!
+		/*cout << lst[0].head->data.no << endl;
+		cout << lst[1].tail->data.no << endl;
+		cout << lst[2].head->data.no << endl;
+		cout << lst[3].tail->data.no << endl;
+		cout << lst[4].head->data.no << endl;
+		cout << lst[5].tail->data.no << endl;*/
+	}
+	else cout << "Can't load data";
+	int  ii = 0;
+	menu(last, lst, pw, ii);
 	_getch();
 }
