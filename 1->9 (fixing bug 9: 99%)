@@ -693,7 +693,7 @@ void moveStudent(listst*&lst, listallst &last, listallstsave &lasts)
 			cin >> cla;
 		} while (cla > listn() && cla < 1 && cout << "We only have " << listn() << " classes!" << endl);
 		int i = cla - 1;
-		for (nodest *p = lst[i].head; p != NULL; p = p->next)
+		for (nodest *p = lst[i].head; p->next != NULL; p = p->next)
 		{
 			if (strcmp(lst[i].head->data.id, ID) == 0)
 			{
