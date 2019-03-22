@@ -676,23 +676,98 @@ int listn()
 	}
 	return n;
 }
-void moveStudent(listst*&lst, listallst &last, listallstsave &lasts)
+void moveStudent(listst*&lst, listallstsave &lasts)
 {
 	char ID[10];
-	int cla;
-	int cla1;
 	int flag = 0;
-	nodest*temp = new nodest;
+	int check = 0;
+	char a[10];
 	do
 	{
 		cout << "Input the student ID you want to move to another class: ";
 		cin >> ID;
+		for (int i = 0; i < listn(); i++)
+		{
+			for (nodest *p = lst[i].head; p != NULL; p = p->next)
+			{
+				if (strcmp(lst[i].head->data.id, ID) == 0)
+				{
+					check = i;
+					cout << "Yeahh, Had found student with ID " << ID << " in the class "<< i + 1 <<"" << endl;
+					cout << "Do you want to remove ??? (yes/no): ";
+					cin >> a;
+					if (strcmp(a, "yes") == 0)
+					{
+						lst[i].head = lst[i].head->next;
+						while (p->next != NULL)
+						{
+							p->next->data.no -= 1;
+							p = p->next;
+						}
+						flag = 1;
+						break;
+					}
+					else break;
+				}
+				if (p->next != NULL)
+				{
+					if (strcmp(p->next->data.id, ID) == 0)
+					{
+						check = i;
+						cout << "Yeahh, Had found student with ID " << ID << " in the class " << i + 1 << "" << endl;
+						cout << "Do you want to remove ??? (yes/no): ";
+						cin >> a;
+						if (strcmp(a, "yes") == 0)
+						{
+							p->next = p->next->next;
+							while (p->next != NULL)
+							{
+								p->next->data.no -= 1;
+								p = p->next;
+							}
+							flag = 1;
+							break;
+						}
+						else break;
+					}
+				}
+				else
+				{
+					if (flag != 1)
+					{
+						cout << "Can't find student with ID " << ID << " in the class!" << endl;
+						flag = 0;
+					}
+				}
+			}
+			if (flag == 1) break;
+		}
+	} while (flag == 0);
+	int index = 0;
+	for (nodeallstsave *t = lasts.head; t != NULL; t = t->next)
+	{
+		if (index == check)
+		{
+			saveStudent(t, lst[check]);
+		}
+		index++;
+	}
+}
+void changeStudent(listst*&lst, listallst &last, listallstsave &lasts, int &cla, int &cla1)
+{
+	char ID[10];
+	int flag = 0;
+	nodest*temp = new nodest;
+	do
+	{
 		do
 		{
 			outputClass(last);
-			cout << "Enter the class of that student (1 -> " << listn() << ") \n ";
+			cout << "Enter the class A (1 -> " << listn() << "): ";
 			cin >> cla;
 		} while (cla > listn() && cla < 1 && cout << "We only have " << listn() << " classes!" << endl);
+		cout << "Input the student ID you want to move to another class: ";
+		cin >> ID;
 		int i = cla - 1;
 		for (nodest *p = lst[i].head; p != NULL; p = p->next)
 		{
@@ -739,7 +814,7 @@ void moveStudent(listst*&lst, listallst &last, listallstsave &lasts)
 	{
 		do
 		{
-			cout << "Enter the class you want that student to move to(1 -> " << listn() << ") \n ";
+			cout << "Enter the class B (1 -> " << listn() << "): ";
 			cin >> cla1;
 		} while (cla1 > listn() && cla1 < 1 && cout << "We only have " << listn() << " classes!" << endl);
 	} while ((cla1 == cla) && cout << "Opps, Please not enter 2 class same " << endl);
@@ -774,7 +849,7 @@ void classmenu(listallst &last, listst *&lst, listpw &lpw, int i, listallstsave 
 	char savest[100];
 	char savepw[100];
 	char import[100];
-	cout << "Let's choose request you want: " << endl;
+	cout << "Let's choose request you want: ";
 	cin >> s;
 	switch (s)
 	{
@@ -784,6 +859,20 @@ void classmenu(listallst &last, listst *&lst, listpw &lpw, int i, listallstsave 
 		outputClass(last);
 		int n = listn();
 		importClass(last, lst[n + 1], lpw, lasts);
+		cout << "Import student of a class from a csv file successfull" << endl;
+		char y[10];
+		cout << "Do you want to continue ??? (yes/no): ";
+		cin >> y;
+		if (strcmp(y, "yes") == 0)
+		{
+			classmenu(last, lst, lpw, i, lasts);
+		}
+		else
+		{
+			cout << "Thanks, See you again !!! \n Click enter to exit !!!" << endl;
+			_getch();
+			exit(0);
+		}
 		break;
 	};
 	case 2:
@@ -804,7 +893,20 @@ void classmenu(listallst &last, listst *&lst, listpw &lpw, int i, listallstsave 
 			}
 		}
 		savePassword("D:/Password.csv", lpw);
-		cout << "Add new student success full" << endl;
+		cout << "Add new student successfull" << endl;
+		char y[10];
+		cout << "Do you want to continue ??? (yes/no): ";
+		cin >> y;
+		if (strcmp(y, "yes") == 0)
+		{
+			classmenu(last, lst, lpw, i, lasts);
+		}
+		else
+		{
+			cout << "Thanks, See you again !!! \n Click enter to exit !!!" << endl;
+			_getch();
+			exit(0);
+		}
 		break;
 	};
 	case 3:
@@ -830,16 +932,64 @@ void classmenu(listallst &last, listst *&lst, listpw &lpw, int i, listallstsave 
 				}
 			}
 		}
-		cout << "Edit an exitsing student success full" << endl;
+		cout << "Edit an exitsing student successfull" << endl;
+		char y[10];
+		cout << "Do you want to continue ??? (yes/no): ";
+		cin >> y;
+		if (strcmp(y, "yes") == 0)
+		{
+			classmenu(last, lst, lpw, i, lasts);
+		}
+		else
+		{
+			cout << "Thanks, See you again !!! \n Click enter to exit !!!" << endl;
+			_getch();
+			exit(0);
+		}
 		break;
 	};
 	case 4:
 	{
 		cout << "Remove a student" << endl;
-		moveStudent(lst, last, lasts);
+		moveStudent(lst, lasts);
+		cout << "Remove a student successfull" << endl;
+		char y[10];
+		cout << "Do you want to continue ??? (yes/no): ";
+		cin >> y;
+		if (strcmp(y, "yes") == 0)
+		{
+			classmenu(last, lst, lpw, i, lasts);
+		}
+		else
+		{
+			cout << "Thanks, See you again !!! \n Click enter to exit !!!" << endl;
+			_getch();
+			exit(0);
+		}
 		break;
 	};
-	case 5: {break; };
+	case 5: 
+	{
+		int a;
+		int b;
+		cout << "Change students from class A to class B" << endl;
+		changeStudent(lst, last, lasts, a, b);
+		cout << "Change students from class " << a << " to class " << b << " successfull" << endl;
+		char y[10];
+		cout << "Do you want to continue ??? (yes/no): ";
+		cin >> y;
+		if (strcmp(y, "yes") == 0)
+		{
+			classmenu(last, lst, lpw, i, lasts);
+		}
+		else
+		{
+			cout << "Thanks, See you again !!! \n Click enter to exit !!!" << endl;
+			_getch();
+			exit(0);
+		}
+		break; 
+	};
 	case 6: {break; };
 	case 7: {break; };
 	default:
@@ -859,7 +1009,7 @@ void staffmenu(listallst &last, listst *&lst, listpw &pw, int i, listallstsave &
 	cout << "4: attendance List" << endl;
 	cout << "5: logout" << endl;
 	int s;
-	cout << "Let's choose the function you want: " << endl;
+	cout << "Let's choose the function you want: ";
 	cin >> s;
 	switch (s)
 	{
@@ -887,7 +1037,7 @@ void lecturermenu()
 	cout << "3: research" << endl;
 	cout << "4: logout" << endl;
 	int s;
-	cout << "Let's choose the function you want: " << endl;
+	cout << "Let's choose the function you want: ";
 	cin >> s;
 	switch (s)
 	{
@@ -928,7 +1078,7 @@ void studentmenu(listpw &pw, char y[], listst *&lst, listallst &last, int i, lis
 			cout << "3: preparelesson" << endl;
 			cout << "4: logout" << endl;
 			int s;
-			cout << "Let's choose the function you want: " << endl;
+			cout << "Let's choose the function you want: ";
 			cin >> s;
 			switch (s)
 			{
@@ -995,6 +1145,7 @@ int login(listpw pw, char y[])
 	{
 		cout << "1: Login" << endl;
 		cout << "2: Change Password" << endl;
+		cout << "Enter: ";
 		cin >> temp;
 	} while (temp > 2);
 	do
@@ -1033,7 +1184,7 @@ void menu(listallst &last, listst *&lst, listpw &pw, int &i, listallstsave &last
 	cout << "2: exit" << endl;
 	int x;
 	int x1;
-	cout << "Please enter " << endl;
+	cout << "Please, Enter the request you want: ";
 	cin >> x;
 	char y[11];
 	if (x == 1)
