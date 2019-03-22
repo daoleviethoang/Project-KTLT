@@ -205,7 +205,7 @@ void insertTail(listcr &l, nodecr *p)
 	}
 }
 int login(listpw pw, char y[], listst st);
-int outputClass(listallst &last);
+void outputClass(listallst &last);
 void menu(listallst &last, listst *&lst, listpw &pw, int &i, listallstsave &lasts);/////////////////////
 
 void insertTail(listpw &l, nodepw *p)
@@ -470,7 +470,7 @@ void addnewstudent(listst &lst, listpw &lpw, int i)
 	nodepw*pw = createNode(pa);
 	insertTail(lpw, pw);
 }
-void importClass(listallst &last,listst &lst, listpw &lpw, listallstsave &lasts)
+void importClass(listallst &last, listst &lst, listpw &lpw, listallstsave &lasts)
 {
 	nameall a;
 	savenameall b;
@@ -645,12 +645,12 @@ bool editstudent(listst &lst, char ID[])
 		current = current->next;
 	}
 }
-int outputClass(listallst &last)
+void outputClass(listallst &last)
 {
 	ifstream fin;
 	fin.open("AllStudents.csv");
 	if (fin.fail())
-		return false;
+		return;
 	nameall nall;
 	int i = 1;
 	init(last);
@@ -658,11 +658,11 @@ int outputClass(listallst &last)
 	{
 		nodeallst *p = createNode(nall);
 		insertTail(last, p);
-		cout<< " "<< i <<" : " << nall.name << endl;
+		cout << " " << i << " : " << nall.name << endl;
 		i++;
 	}
 	fin.close();
-	return i;
+	return;
 }
 int listn()
 {
@@ -689,11 +689,12 @@ void moveStudent(listst*&lst, listallst &last, listallstsave &lasts)
 		cin >> ID;
 		do
 		{
-			cout << "Enter the class of that student (1 -> " << listn() << ") \n " << outputClass(last);
+			outputClass(last);
+			cout << "Enter the class of that student (1 -> " << listn() << ") \n ";
 			cin >> cla;
 		} while (cla > listn() && cla < 1 && cout << "We only have " << listn() << " classes!" << endl);
 		int i = cla - 1;
-		for (nodest *p = lst[i].head; p->next != NULL; p = p->next)
+		for (nodest *p = lst[i].head; p != NULL; p = p->next)
 		{
 			if (strcmp(lst[i].head->data.id, ID) == 0)
 			{
@@ -705,25 +706,32 @@ void moveStudent(listst*&lst, listallst &last, listallstsave &lasts)
 					p->next->data.no -= 1;
 					p = p->next;
 				}
-				break;
-			}
-			if (strcmp(p->next->data.id, ID) == 0)
-			{
-				cout << "Found student with ID " << ID << " in the class!" << endl;
-				temp = p->next;
-				p->next = p->next->next;
-				while (p->next != NULL)
-				{
-					p->next->data.no -= 1;
-					p = p->next;
-				}
 				flag = 1;
 				break;
 			}
-			if (p->next->next == NULL)
+			if (p->next != NULL)
 			{
-				cout << "Can't find student with ID " << ID << " in the class!" << endl;
-				flag = 0;
+				if (strcmp(p->next->data.id, ID) == 0)
+				{
+					cout << "Found student with ID " << ID << " in the class!" << endl;
+					temp = p->next;
+					p->next = p->next->next;
+					while (p->next != NULL)
+					{
+						p->next->data.no -= 1;
+						p = p->next;
+					}
+					flag = 1;
+					break;
+				}
+			}
+			else
+			{
+				if (flag != 1)
+				{
+					cout << "Can't find student with ID " << ID << " in the class!" << endl;
+					flag = 0;
+				}
 			}
 		}
 	} while (flag == 0);
@@ -731,7 +739,7 @@ void moveStudent(listst*&lst, listallst &last, listallstsave &lasts)
 	{
 		do
 		{
-			cout << "Enter the class you want that student to move to(1 -> " << listn() << ") \n " << outputClass(last);
+			cout << "Enter the class you want that student to move to(1 -> " << listn() << ") \n ";
 			cin >> cla1;
 		} while (cla1 > listn() && cla1 < 1 && cout << "We only have " << listn() << " classes!" << endl);
 	} while ((cla1 == cla) && cout << "Opps, Please not enter 2 class same " << endl);
@@ -773,7 +781,8 @@ void classmenu(listallst &last, listst *&lst, listpw &lpw, int i, listallstsave 
 	case 1:
 	{
 		cout << "Import student of a class from a csv file" << endl;
-		int n = outputClass(last);
+		outputClass(last);
+		int n = listn();
 		importClass(last, lst[n + 1], lpw, lasts);
 		break;
 	};
@@ -784,9 +793,9 @@ void classmenu(listallst &last, listst *&lst, listpw &lpw, int i, listallstsave 
 		cout << "Choose class: ";
 		cin >> i;
 		addnewstudent(lst[i], lpw, i);
-		cout << "Choose save class (suggest: 18CLC"<< i <<"SaveStudent.csv): ";
+		cout << "Choose save class (suggest: 18CLC" << i << "SaveStudent.csv): ";
 		cin >> a;
-		for(nodeallstsave * p = lasts.head; p!=NULL;p=p->next)
+		for (nodeallstsave * p = lasts.head; p != NULL; p = p->next)
 		{
 			if (strcmp(p->data.savename, a) == 0)
 			{
@@ -824,7 +833,7 @@ void classmenu(listallst &last, listst *&lst, listpw &lpw, int i, listallstsave 
 		cout << "Edit an exitsing student success full" << endl;
 		break;
 	};
-	case 4: 
+	case 4:
 	{
 		cout << "Remove a student" << endl;
 		moveStudent(lst, last, lasts);
@@ -856,7 +865,7 @@ void staffmenu(listallst &last, listst *&lst, listpw &pw, int i, listallstsave &
 	{
 	case 1:
 	{
-		classmenu(last,lst, pw,i,lasts);
+		classmenu(last, lst, pw, i, lasts);
 		break;
 	};
 	case 2: {break; };
@@ -1045,7 +1054,7 @@ void menu(listallst &last, listst *&lst, listpw &pw, int &i, listallstsave &last
 		if (x1 == 3)
 		{
 			system("cls");
-			studentmenu(pw, y, lst, last , i, lasts);
+			studentmenu(pw, y, lst, last, i, lasts);
 		}
 	}
 	else if (x == 2)
