@@ -835,6 +835,31 @@ void changeStudent(listst*&lst, listallst &last, listallstsave &lasts, int &cla,
 		}
 	}
 }
+void viewClassandList(listallst &last, listst *&lst)
+{
+	outputClass(last);
+	char a[10];
+	int b = 0;
+	char c[10];
+	int index = 0;
+	cout << "Do you want to view list of students in a class??? (yes/no): ";
+	cin >> a;
+	if (strcmp(a, "yes") == 0)
+	{
+		cout << "Choose a class to see: ";
+		cin >> b;
+		for (nodeallst *p = last.head; p != NULL; p = p->next)
+		{
+			index++;
+			if (index == b)
+			{
+				for(nodest *p = lst[b - 1].head; p!=NULL;p=p->next)
+				cout << p->data.no << "|" << p->data.id << "|" << p->data.lastname << "" << p->data.firstname << "|" << p->data.sex << "|" << p->data.birth.month << "/" << p->data.birth.day << "/" << p->data.birth.year << endl;
+			}
+		}
+	}
+	else return;
+}
 void classmenu(listallst &last, listst *&lst, listpw &lpw, int i, listallstsave &lasts)
 {
 	cout << "Class:" << endl;
@@ -843,8 +868,8 @@ void classmenu(listallst &last, listst *&lst, listpw &lpw, int i, listallstsave 
 	cout << "3: Edit an exitsing student" << endl;
 	cout << "4: Remove astudent" << endl;
 	cout << "5: Change student of a classes" << endl;
-	cout << "6: View list of classes" << endl;
-	cout << "7: View list of student in a class" << endl;
+	cout << "6: View list of classes & View list of student in a class" << endl;
+	cout << "7: Back" << endl;
 	int s;
 	char savest[100];
 	char savepw[100];
@@ -990,8 +1015,29 @@ void classmenu(listallst &last, listst *&lst, listpw &lpw, int i, listallstsave 
 		}
 		break; 
 	};
-	case 6: {break; };
-	case 7: {break; };
+	case 6: 
+	{
+		char a[10];
+		viewClassandList(last, lst);
+		cout << "Do you want to continue with another function??? (yes/no): ";
+		cin >> a;
+		cout << "Open the class list successfull !!!" << endl;
+		if (strcmp(a, "yes") == 0)
+			classmenu(last, lst, lpw, i, lasts);
+
+		else
+		{
+			cout << "Thanks, See you again !!! \n Click enter to exit !!!" << endl;
+			_getch();
+			exit(0);
+		}
+		break;
+	};
+	case 7: 
+	{
+		menu(last, lst, lpw, i, lasts);
+		break; 
+	};
 	default:
 		system("cls");
 		cout << "Incorrect,please enter again! " << endl;
