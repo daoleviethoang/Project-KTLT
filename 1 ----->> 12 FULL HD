@@ -681,6 +681,7 @@ void moveStudent(listst*&lst, listallstsave &lasts)
 	char ID[10];
 	int flag = 0;
 	int check = 0;
+	int check1 = 0;
 	char a[10];
 	do
 	{
@@ -693,6 +694,7 @@ void moveStudent(listst*&lst, listallstsave &lasts)
 				if (strcmp(lst[i].head->data.id, ID) == 0)
 				{
 					check = i;
+					check1 = 1;
 					cout << "Yeahh, Had found student with ID " << ID << " in the class "<< i + 1 <<"" << endl;
 					cout << "Do you want to remove ??? (yes/no): ";
 					cin >> a;
@@ -714,6 +716,7 @@ void moveStudent(listst*&lst, listallstsave &lasts)
 					if (strcmp(p->next->data.id, ID) == 0)
 					{
 						check = i;
+						check1 = 1;
 						cout << "Yeahh, Had found student with ID " << ID << " in the class " << i + 1 << "" << endl;
 						cout << "Do you want to remove ??? (yes/no): ";
 						cin >> a;
@@ -735,12 +738,16 @@ void moveStudent(listst*&lst, listallstsave &lasts)
 				{
 					if (flag != 1)
 					{
-						cout << "Can't find student with ID " << ID << " in the class!" << endl;
 						flag = 0;
+						check1 = 0;
 					}
 				}
 			}
 			if (flag == 1) break;
+		}
+		if (check1 == 0)
+		{
+			cout << "Can't find student with ID " << ID << " in the class!" << endl;
 		}
 	} while (flag == 0);
 	int index = 0;
@@ -853,8 +860,11 @@ void viewClassandList(listallst &last, listst *&lst)
 			index++;
 			if (index == b)
 			{
+				cout << "--------------------------------------------------------" << endl;
+				cout << "No|StudentID|Name|Birthday" << endl;
 				for(nodest *p = lst[b - 1].head; p!=NULL;p=p->next)
-				cout << p->data.no << "|" << p->data.id << "|" << p->data.lastname << "" << p->data.firstname << "|" << p->data.sex << "|" << p->data.birth.month << "/" << p->data.birth.day << "/" << p->data.birth.year << endl;
+				cout << p->data.no << "|" << p->data.id << "|" << p->data.lastname << " " << p->data.firstname << "|" << p->data.sex << "|" << p->data.birth.month << "/" << p->data.birth.day << "/" << p->data.birth.year << endl;
+				cout << "--------------------------------------------------------" << endl;
 			}
 		}
 	}
@@ -880,6 +890,7 @@ void classmenu(listallst &last, listst *&lst, listpw &lpw, int i, listallstsave 
 	{
 	case 1:
 	{
+		system("cls");
 		cout << "Import student of a class from a csv file" << endl;
 		outputClass(last);
 		int n = listn();
@@ -890,6 +901,7 @@ void classmenu(listallst &last, listst *&lst, listpw &lpw, int i, listallstsave 
 		cin >> y;
 		if (strcmp(y, "yes") == 0)
 		{
+			system("cls");
 			classmenu(last, lst, lpw, i, lasts);
 		}
 		else
@@ -924,6 +936,7 @@ void classmenu(listallst &last, listst *&lst, listpw &lpw, int i, listallstsave 
 		cin >> y;
 		if (strcmp(y, "yes") == 0)
 		{
+			system("cls");
 			classmenu(last, lst, lpw, i, lasts);
 		}
 		else
@@ -963,6 +976,7 @@ void classmenu(listallst &last, listst *&lst, listpw &lpw, int i, listallstsave 
 		cin >> y;
 		if (strcmp(y, "yes") == 0)
 		{
+			system("cls");
 			classmenu(last, lst, lpw, i, lasts);
 		}
 		else
@@ -983,6 +997,7 @@ void classmenu(listallst &last, listst *&lst, listpw &lpw, int i, listallstsave 
 		cin >> y;
 		if (strcmp(y, "yes") == 0)
 		{
+			system("cls");
 			classmenu(last, lst, lpw, i, lasts);
 		}
 		else
@@ -1005,6 +1020,7 @@ void classmenu(listallst &last, listst *&lst, listpw &lpw, int i, listallstsave 
 		cin >> y;
 		if (strcmp(y, "yes") == 0)
 		{
+			system("cls");
 			classmenu(last, lst, lpw, i, lasts);
 		}
 		else
@@ -1023,7 +1039,10 @@ void classmenu(listallst &last, listst *&lst, listpw &lpw, int i, listallstsave 
 		cin >> a;
 		cout << "Open the class list successfull !!!" << endl;
 		if (strcmp(a, "yes") == 0)
+		{
+			system("cls");
 			classmenu(last, lst, lpw, i, lasts);
+		}
 
 		else
 		{
@@ -1061,6 +1080,7 @@ void staffmenu(listallst &last, listst *&lst, listpw &pw, int i, listallstsave &
 	{
 	case 1:
 	{
+		system("cls");
 		classmenu(last, lst, pw, i, lasts);
 		break;
 	};
@@ -1193,6 +1213,7 @@ int login(listpw pw, char y[])
 		cout << "2: Change Password" << endl;
 		cout << "Enter: ";
 		cin >> temp;
+		cout << "--------------------------------------" << endl;
 	} while (temp > 2);
 	do
 	{
@@ -1226,12 +1247,15 @@ int login(listpw pw, char y[])
 }
 void menu(listallst &last, listst *&lst, listpw &pw, int &i, listallstsave &lasts)
 {
-	cout << "1: login" << endl;
-	cout << "2: exit" << endl;
+	cout << "--------------------------------------" << endl;
+	cout << "1: LOGIN" << endl;
+	cout << "2: EXIT" << endl;
+	cout << "--------------------------------------" << endl;
 	int x;
 	int x1;
 	cout << "Please, Enter the request you want: ";
 	cin >> x;
+	cout << "--------------------------------------" << endl;
 	char y[11];
 	if (x == 1)
 	{
@@ -1283,19 +1307,15 @@ void main()
 	}
 	listallst last;
 	listallstsave lasts;
+	cout << "\n                   |************* WELCOME TO PROJECT *************|\n\n" << endl;
 	int k = loadPassword("Password.csv", pw, a);
 	if (k)
 	{
 		k = savePassword("SavePassword.csv", pw);
-		if (k)
-		{
-			cout << "Load Password file success full" << endl;
-		}
 	}
 	int h = loadall(lst, last, lasts);
 	if (h)
 	{
-		cout << "Load and save file successfull" << endl;
 		//Khuc nay de test nha!!!!!!
 		/*cout << lst[0].head->data.no << endl;
 		cout << lst[1].tail->data.no << endl;
