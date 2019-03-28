@@ -43,7 +43,7 @@ void addnewcourse(listcr &l, listst*&lst)
 	init(cr.liststudent);
 	nodest*pst = new nodest;
 	pst = lst[i].head;
-	while (pst->next != NULL)
+	while (pst!= NULL)
 	{
 		insertTail(cr.liststudent, pst);
 		pst = pst->next;
