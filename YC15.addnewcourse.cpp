@@ -5,8 +5,9 @@ void addnewcourse(listcr &l, listst*&lst)
 	cr.no = l.tail->data.no + 1;
 	cout << "Enter Course ID: ";
 	cin >> cr.id;
+	cin.get();
 	cout << "Enter Course Name: ";
-	cin >> cr.name;
+	cin.getline(cr.name, '/n');
 	cout << "Enter Class of Course: ";
 	cin >> cr.classn;
 	cout << "Enter Lecture Account: ";
