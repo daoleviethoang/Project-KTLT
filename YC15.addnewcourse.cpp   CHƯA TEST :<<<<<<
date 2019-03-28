@@ -38,11 +38,11 @@ void addnewcourse(listcr &l, listst*&lst)
 
 
 	//Tự động điền danh sách học sinh từ lớp sang môn học
-	int i = cr.classn[5] - 1;
+	int i = cr.classn[5] - 49;
 	init(cr.liststudent);
 	nodest*pst = new nodest;
 	pst = lst[i].head;
-	while (pst->next == NULL)
+	while (pst->next != NULL)
 	{
 		insertTail(cr.liststudent, pst);
 		pst = pst->next;
