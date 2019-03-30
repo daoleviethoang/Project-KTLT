@@ -1,4 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
+#include <windows.h>
+#include <stdio.h>
 #include <iostream>
 #include <fstream>
 #include <conio.h>
@@ -19,8 +21,13 @@ struct student {
 	date birth;
 };
 struct time {
-	char hour[5];
-	char minute[5];
+	int hour;
+	int minute;
+};
+struct date1 {
+	int day;
+	int month;
+	int year;
 };
 struct course
 {
@@ -29,8 +36,8 @@ struct course
 	char name[100];
 	char classn[100];
 	char lecture[100];
-	date start;
-	date end;
+	date1 start;
+	date1 end;
 	char day[100];
 	time start1;
 	time end1;
@@ -380,15 +387,15 @@ bool saveSaveStudentAll(listallstsave &lasts)
 	fout.close();
 	return true;
 }
-bool loadCourse(const char *path, listcr &l, char b[])
+bool loadCourse(const char *path, listcr &lcr, char b[])
 {
 	ifstream fin;
 	fin.open(path);
 	if (fin.fail())
 		return false;
-	init(l);
-	fin.getline(b, 200, '\n');
 	course cr;
+	fin.getline(b, 200, '\n');
+	lcr.head = lcr.tail = NULL;
 	while (fin >> cr.no)
 	{
 		fin.get();
@@ -396,20 +403,30 @@ bool loadCourse(const char *path, listcr &l, char b[])
 		fin.getline(cr.name, 100, ',');
 		fin.getline(cr.classn, 7, ',');
 		fin.getline(cr.lecture, 100, ',');
-		fin.getline(cr.start.day, 5, '/');
-		fin.getline(cr.start.month, 5, '/');
-		fin.getline(cr.start.year, 5, ',');
-		fin.getline(cr.end.day, 5, '/');
-		fin.getline(cr.end.month, 5, '/');
-		fin.getline(cr.end.year, 5, ',');
-		fin.getline(cr.day, 10, ',');
-		fin.getline(cr.start1.hour, 3, ':');
-		fin.getline(cr.start1.minute, 3, ',');
-		fin.getline(cr.end1.hour, 6, ':');
-		fin.getline(cr.end1.minute, 6, ',');
+		fin >> cr.start.day;
+		fin.ignore();
+		fin >> cr.start.month;
+		fin.ignore();
+		fin >> cr.start.year;
+		fin.ignore();
+		fin >> cr.end.day;
+		fin.ignore();
+		fin >> cr.end.month;
+		fin.ignore();
+		fin >> cr.end.year;
+		fin.ignore();
+		fin.getline(cr.day, 100, ',');
+		fin >> cr.start1.hour;
+		fin.ignore();
+		fin >> cr.start1.minute;
+		fin.ignore();
+		fin >> cr.end1.hour;
+		fin.ignore();
+		fin >> cr.end1.minute;
+		fin.ignore();
 		fin.getline(cr.room, 10, '\n');
 		nodecr *p = createNode(cr);
-		insertTail(l, p);
+		insertTail(lcr, p);
 	}
 	fin.close();
 	return true;
@@ -685,7 +702,7 @@ void moveStudent(listst*&lst, listallstsave &lasts)
 	char a[10];
 	do
 	{
-		cout << "Input the student ID you want to move to remove: ";
+		cout << "Input the student ID you want to move to another class: ";
 		cin >> ID;
 		for (int i = 0; i < listn(); i++)
 		{
@@ -695,7 +712,7 @@ void moveStudent(listst*&lst, listallstsave &lasts)
 				{
 					check = i;
 					check1 = 1;
-					cout << "Yeahh, Had found student with ID " << ID << " in the class "<< i + 1 <<"" << endl;
+					cout << "Yeahh, Had found student with ID " << ID << " in the class " << i + 1 << "" << endl;
 					cout << "Do you want to remove ??? (yes/no): ";
 					cin >> a;
 					if (strcmp(a, "yes") == 0)
@@ -862,17 +879,362 @@ void viewClassandList(listallst &last, listst *&lst)
 			{
 				cout << "--------------------------------------------------------" << endl;
 				cout << "No|StudentID|Name|Birthday" << endl;
-				for(nodest *p = lst[b - 1].head; p!=NULL;p=p->next)
-				cout << p->data.no << "|" << p->data.id << "|" << p->data.lastname << " " << p->data.firstname << "|" << p->data.sex << "|" << p->data.birth.month << "/" << p->data.birth.day << "/" << p->data.birth.year << endl;
+				for (nodest *p = lst[b - 1].head; p != NULL; p = p->next)
+					cout << p->data.no << "|" << p->data.id << "|" << p->data.lastname << " " << p->data.firstname << "|" << p->data.sex << "|" << p->data.birth.month << "/" << p->data.birth.day << "/" << p->data.birth.year << endl;
 				cout << "--------------------------------------------------------" << endl;
 			}
 		}
 	}
 	else return;
 }
+/*
+void addnewcourse(listcr &l, listst*&lst)
+{
+	course cr;
+	cout << "Add new course" << endl;
+	cr.no = l.tail->data.no + 1;
+	cout << "Enter Course ID: ";
+	cin >> cr.id;
+	cout << "Enter Course Name: ";
+	cin >> cr.name;
+	cout << "Enter Class of Course: ";
+	cin >> cr.classn;
+	cout << "Enter Lecture Account: ";
+	cin >> cr.lecture;
+	cout << "Enter Day of Start Date: ";
+	cin >> cr.start.day;
+	cout << "Enter Month of Start Date: ";
+	cin >> cr.start.month;
+	cout << "Enter Year of Start Date: ";
+	cin >> cr.start.year;
+	cout << "Enter Day of End Date: ";
+	cin >> cr.end.day;
+	cout << "Enter Month of End Date: ";
+	cin >> cr.end.month;
+	cout << "Enter Year of End Date: ";
+	cin >> cr.end.year;
+	cout << "Enter the Day of Week the course take: ";
+	cin >> cr.day;
+	cout << "Enter the Start Hour: ";
+	cin >> cr.start1.hour;
+	cout << "Enter the Start Minute: ";
+	cin >> cr.start1.minute;
+	cout << "Enter the End Hour: ";
+	cin >> cr.end1.hour;
+	cout << "Enter the End Minute: ";
+	cin >> cr.end1.minute;
+	cout << "Enter the room of the Course: ";
+	cin >> cr.room;
+
+
+	//T? ??ng ?i?n danh sách h?c sinh t? l?p sang môn h?c
+	int i = cr.classn[5] - 1;
+	init(cr.liststudent);
+	nodest*pst = new nodest;
+	pst = lst[i].head;
+	while (pst->next == NULL)
+	{
+		insertTail(cr.liststudent, pst);
+		pst = pst->next;
+	}
+
+	nodecr*p = createNode(cr);
+	insertTail(l, p);
+}*/
+bool Create(const char *path)
+{
+	if (!CreateDirectory(path, NULL))
+		return false;
+	else return true;
+}
+void CreateAll()
+{
+	Create("2018 - 2019");
+	Create("2018 - 2019/Semester 1");
+	Create("2018 - 2019/Semester 2");
+	Create("2018 - 2019/Semester 3");
+}
+bool loadsemester(const string path, listcr *&lcr, char b[], int i)
+{
+	ifstream fin;
+	fin.open(path);
+	if (fin.fail())
+		return false;
+	course cr;
+	fin.getline(b, 200, '\n');
+	for (int i = 0; i < 2; i++)
+	{
+		init(lcr[i]);
+	}
+	while (fin >> cr.no)
+	{
+		fin.get();
+		fin.getline(cr.id, 10, ',');
+		fin.getline(cr.name, 100, ',');
+		fin.getline(cr.classn, 7, ',');
+		fin.getline(cr.lecture, 100, ',');
+		fin >> cr.start.day;
+		fin.ignore();
+		fin >> cr.start.month;
+		fin.ignore();
+		fin >> cr.start.year;
+		fin.ignore();
+		fin >> cr.end.day;
+		fin.ignore();
+		fin >> cr.end.month;
+		fin.ignore();
+		fin >> cr.end.year;
+		fin.ignore();
+		fin.getline(cr.day, 100, ',');
+		fin >> cr.start1.hour;
+		fin.ignore();
+		fin >> cr.start1.minute;
+		fin.ignore();
+		fin >> cr.end1.hour;
+		fin.ignore();
+		fin >> cr.end1.minute;
+		fin.ignore();
+		fin.getline(cr.room, 10, '\n');
+		nodecr *p = createNode(cr);
+		insertTail(lcr[i], p);
+	}
+	fin.close();
+	return true;
+}
+bool savesemester(const string path, listcr *&lcr, char b[], int i)
+{
+	ofstream fout;
+	fout.open(path);
+
+	if (fout.fail())
+		return false;
+	fout << b << endl;
+	for (nodecr *p = lcr[i].head; p != NULL; p = p->next)
+	{
+		course cr = p->data;
+		if (cr.no < 0) break;
+		fout << cr.no << "," << cr.id << "," << cr.name << "," << cr.classn << "," << cr.lecture << "," << cr.start.month << "/" << cr.start.day << "/" << cr.start.year << ',' << cr.end.month << "/" << cr.end.day << "/" << cr.end.year << ',' << cr.day << ',' << cr.start1.hour << ':' << cr.start1.minute << ',' << cr.end1.hour << ':' << cr.end1.minute << ',' << cr.room << endl;
+	}
+	fout.close();
+	return true;
+}
+bool semester(listcr *&lcr, char b[], int i)
+{
+	int h, k;
+	string a[3] = { "2018 - 2019/Semester 1/courseS1.csv", "2018 - 2019/Semester 2/courseS2.csv", "2018 - 2019/Semester 3/courseS3.csv" };
+	for (int i = 0; i < 2; i++)
+	{
+		h = loadsemester(a[i], lcr, b, i);
+		k = savesemester(a[i], lcr, b, i);
+	}
+	if (h == true && k == true)
+		return true;
+	else return false;
+}
+void viewsemester(listcr *&lcr, char b[], int i)
+{
+	semester(lcr, b, i);
+	cout << "------| SCHOLASTIC 2018 - 2019 |------" << endl;
+	cout << "1: Semester 1" << endl;
+	cout << "2: Semester 2" << endl;
+	cout << "3: Semester 3" << endl;
+	int n;
+	cout << "Enter the semester you want to see: ";
+	cin >> n;
+	cout << endl;
+	for (nodecr *p = lcr[n - 1].head; p != NULL; p = p->next)
+	{
+		course cr = p->data;
+		if (cr.no < 0) break;
+		cout << cr.no << "," << cr.id << "," << cr.name << "," << cr.classn << "," << cr.lecture << "," << cr.start.month << "/" << cr.start.day << "/" << cr.start.year << ',' << cr.end.month << "/" << cr.end.day << "/" << cr.end.year << ',' << cr.day << ',' << cr.start1.hour << ':' << cr.start1.minute << ',' << cr.end1.hour << ':' << cr.end1.minute << ',' << cr.room << endl;
+	}
+}
+void course1menu(listcr *&lcr, char b[], int i)
+{
+	cout << "Create/update/delete/view academic years (2018 - 2019) & semesters" << endl;
+	cout << "1: Create" << endl;
+	cout << "2: Update" << endl;
+	cout << "3: Delete" << endl;
+	cout << "4: View academic years (2018 - 2019) & semesters" << endl;
+	cout << "5: Back" << endl;
+	int s;
+	cout << "Let's choose request you want: ";
+	cin >> s;
+	switch (s)
+	{
+	case 1:
+	{
+		system("cls");
+		CreateAll();
+		cout << "Create academic years (2018 - 2019) & semesters successfull" << endl;
+		break;
+	}
+	case 2:
+	{
+		break;
+	}
+	case 3:
+	{
+		break;
+	}
+	case 4:
+	{
+		system("cls");
+		viewsemester(lcr,b,i);
+		break;
+	}
+	case 5:
+	{
+		break;
+	}
+	default:
+	{
+		system("cls");
+		cout << "Incorrect,please enter again! " << endl;
+		system("cls");
+		course1menu(lcr, b, i);
+		break;
+	}
+	}
+}
+bool importcourse()
+{
+	listcr lcr;
+	ofstream fout;
+	ofstream fout1;
+	ofstream fout2;
+	fout.open("2018 - 2019/Semester 1/courseS1.csv");
+	fout1.open("2018 - 2019/Semester 2/courseS2.csv");
+	fout2.open("2018 - 2019/Semester 3/courseS3.csv");
+	if (fout.fail() && fout1.fail() && fout2.fail())
+		return false;
+	char a[200];
+	int check = 0;
+	int number1 = 1;
+	int number2 = 1;
+	int number3 = 1;
+	loadCourse("Course.csv", lcr, a);
+	fout << a << endl;
+	fout1 << a << endl;
+	fout2 << a << endl;
+	for (nodecr *p = lcr.head; p != NULL; p = p->next)
+	{
+		course cr = p->data;
+		if (cr.start.day > 1 && cr.start.month == 9 && cr.start.year == 2018 && cr.end.day < 30 && cr.end.month == 11 && cr.end.year == 2018)
+		{
+			if (cr.no < 0) break;
+			cr.no = number1;
+			fout << cr.no << "," << cr.id << "," << cr.name << "," << cr.classn << "," << cr.lecture << "," << cr.start.month << "/" << cr.start.day << "/" << cr.start.year << ',' << cr.end.month << "/" << cr.end.day << "/" << cr.end.year << ',' << cr.day << ',' << cr.start1.hour << ':' << cr.start1.minute << ',' << cr.end1.hour << ':' << cr.end1.minute << ',' << cr.room << endl;
+			number1++;
+		}
+		else if (cr.start.day > 1 && cr.start.month == 1 && cr.start.year == 2019 && cr.end.day < 30 && cr.end.month == 4 && cr.end.year == 2019)
+		{
+			if (cr.no < 0) break;
+			cr.no = number2;
+			fout1 << cr.no << "," << cr.id << "," << cr.name << "," << cr.classn << "," << cr.lecture << "," << cr.start.month << "/" << cr.start.day << "/" << cr.start.year << ',' << cr.end.month << "/" << cr.end.day << "/" << cr.end.year << ',' << cr.day << ',' << cr.start1.hour << ':' << cr.start1.minute << ',' << cr.end1.hour << ':' << cr.end1.minute << ',' << cr.room << endl;
+			number2++;
+		}
+		else
+		{
+			if (cr.no < 0) break;
+			cr.no = number3;
+			fout2 << cr.no << "," << cr.id << "," << cr.name << "," << cr.classn << "," << cr.lecture << "," << cr.start.month << "/" << cr.start.day << "/" << cr.start.year << ',' << cr.end.month << "/" << cr.end.day << "/" << cr.end.year << ',' << cr.day << ',' << cr.start1.hour << ':' << cr.start1.minute << ',' << cr.end1.hour << ':' << cr.end1.minute << ',' << cr.room << endl;
+			number3++;
+		}
+	}
+	fout.close();
+	return true;
+}
+void coursemenu()
+{
+	listcr *lcr =  new listcr[3];
+	char b[100];
+	int i = 0;
+	cout << "__COURSE__" << endl;
+	cout << "1: Create/update/delete/view academic years (2018 - 2019) & semesters" << endl;
+	cout << "2: Import courses to semester" << endl;
+	cout << "3: Manually add a new course" << endl;
+	cout << "4: Edit an existing course" << endl;
+	cout << "5: Remove a course" << endl;
+	cout << "6: Remove a specific student from a course" << endl;
+	cout << "7: Add a specific student to a course" << endl;
+	cout << "8: View list of courses in the current semester" << endl;
+	cout << "9: View list of students of a course" << endl;
+	cout << "10: View attendance list of a course" << endl;
+	cout << "11: Create / update / delete / view all lecturers" << endl;
+	cout << "12: Back" << endl;
+	int s;
+	cout << "Let's choose request you want: ";
+	cin >> s;
+	switch (s)
+	{
+	case 1:
+	{
+		system("cls");
+		course1menu(lcr,b,i);
+		break;
+	}
+	case 2:
+	{
+		system("cls");
+		if(semester(lcr, b, i)) cout << "Import Successfull" << endl;
+		else cout << "Can't load data" << endl;
+		break;
+	}
+	case 3:
+	{
+		break;
+	}
+	case 4:
+	{
+		break;
+	}
+	case 5:
+	{
+		break;
+	}
+	case 6:
+	{
+		break;
+	}
+	case 7:
+	{
+		break;
+	}
+	case 8:
+	{
+		break;
+	}
+	case 9:
+	{
+		break;
+	}
+	case 10:
+	{
+		break;
+	}
+	case 11:
+	{
+		break;
+	}
+	case 12:
+	{
+		break;
+	}
+	default:
+	{
+		system("cls");
+		cout << "Incorrect,please enter again! " << endl;
+		system("cls");
+		coursemenu();
+		break;
+	}
+	}
+
+}
 void classmenu(listallst &last, listst *&lst, listpw &lpw, int i, listallstsave &lasts)
 {
-	cout << "Class:" << endl;
+	cout << "__CLASS__" << endl;
 	cout << "1: Import students of a class" << endl;
 	cout << "2: Add a new student" << endl;
 	cout << "3: Edit an exitsing student" << endl;
@@ -1008,7 +1370,7 @@ void classmenu(listallst &last, listst *&lst, listpw &lpw, int i, listallstsave 
 		}
 		break;
 	};
-	case 5: 
+	case 5:
 	{
 		int a;
 		int b;
@@ -1029,9 +1391,9 @@ void classmenu(listallst &last, listst *&lst, listpw &lpw, int i, listallstsave 
 			_getch();
 			exit(0);
 		}
-		break; 
+		break;
 	};
-	case 6: 
+	case 6:
 	{
 		char a[10];
 		viewClassandList(last, lst);
@@ -1052,17 +1414,19 @@ void classmenu(listallst &last, listst *&lst, listpw &lpw, int i, listallstsave 
 		}
 		break;
 	};
-	case 7: 
+	case 7:
 	{
 		menu(last, lst, lpw, i, lasts);
-		break; 
+		break;
 	};
 	default:
+	{
 		system("cls");
 		cout << "Incorrect,please enter again! " << endl;
 		system("cls");
 		classmenu(last, lst, lpw, i, lasts);
 		break;
+	}
 	}
 }
 void staffmenu(listallst &last, listst *&lst, listpw &pw, int i, listallstsave &lasts)
@@ -1084,15 +1448,22 @@ void staffmenu(listallst &last, listst *&lst, listpw &pw, int i, listallstsave &
 		classmenu(last, lst, pw, i, lasts);
 		break;
 	};
-	case 2: {break; };
+	case 2:
+	{
+		system("cls");
+		coursemenu();
+		break;
+	};
 	case 3: {break; };
 	case 4: {break; };
 	case 5: {break; };
 	default:
+	{
 		system("cls");
 		cout << "Incorrect,please enter again! " << endl;
 		system("cls");
 		staffmenu(last, lst, pw, i, lasts);
+	}
 	}
 }
 void lecturermenu()
@@ -1112,13 +1483,14 @@ void lecturermenu()
 	case 3: {break; };
 	case 4: {break; };
 	default:
+	{
 		system("cls");
 		cout << "Incorrect,please enter again! " << endl;
 
 		lecturermenu();
 	}
+	}
 }
-
 void studentmenu(listpw &pw, char y[], listst *&lst, listallst &last, int i, listallstsave &lasts)
 {
 	int check = 0;
@@ -1156,10 +1528,12 @@ void studentmenu(listpw &pw, char y[], listst *&lst, listallst &last, int i, lis
 				break; };
 
 			default:
+			{
 				system("cls");
 				cout << "Incorrect,please enter again! " << endl;
 
 				studentmenu(pw, y, lst, last, i, lasts);
+			}
 			}
 			break;
 		}
@@ -1199,7 +1573,6 @@ void changePassword(listpw &l, char user[50], char password[50])
 		}
 	} while ((strcmp(check, password) != 0) && cout << "Wrong!! Please do it again!" << endl);
 }
-
 int login(listpw pw, char y[])
 {
 	char user[9];
@@ -1263,6 +1636,8 @@ void menu(listallst &last, listst *&lst, listpw &pw, int &i, listallstsave &last
 		if (x1 == 1)
 		{
 			system("cls");
+			char b[100];
+			int k = 0;
 			staffmenu(last, lst, pw, i, lasts);
 
 		}
@@ -1297,7 +1672,6 @@ void menu(listallst &last, listst *&lst, listpw &pw, int &i, listallstsave &last
 void main()
 {
 	listpw pw;
-	listcr cr;
 	char a[200];
 	int size = listn();
 	listst*lst = new listst[size];
@@ -1325,6 +1699,10 @@ void main()
 		cout << lst[5].tail->data.no << endl;*/
 	}
 	else cout << "Can't load data";
+	CreateAll();
+	int zz = importcourse();
+	if (zz) cout << "success" << endl;
+	else cout << "Error" << endl;
 	int  ii = 0;
 	menu(last, lst, pw, ii, lasts);
 	_getch();
