@@ -29,6 +29,16 @@ struct date1 {
 	int month;
 	int year;
 };
+struct nodest
+{
+	student data;
+	nodest *next;
+};
+struct liststcr
+{
+	nodest *head;
+	nodest *tail;
+};
 struct course
 {
 	int no;
@@ -42,6 +52,7 @@ struct course
 	time start1;
 	time end1;
 	char room[100];
+	liststcr lstcr;
 };
 struct password
 {
@@ -59,11 +70,6 @@ struct listpw
 {
 	nodepw *head;
 	nodepw *tail;
-};
-struct nodest
-{
-	student data;
-	nodest *next;
 };
 struct listst
 {
@@ -200,6 +206,18 @@ void insertTail(listst &lst, nodest *p)
 	}
 }
 void insertTail(listcr &l, nodecr *p)
+{
+	if (l.head == NULL)
+	{
+		l.head = l.tail = p;
+	}
+	else
+	{
+		l.tail->next = p;
+		l.tail = p;
+	}
+}
+void insertTail(liststcr &l, nodest *p)
 {
 	if (l.head == NULL)
 	{
@@ -887,16 +905,16 @@ void viewClassandList(listallst &last, listst *&lst)
 	}
 	else return;
 }
-/*
-void addnewcourse(listcr &l, listst*&lst)
+void addnewcourse(listcr &lcr, listst*&lst, int i)
 {
 	course cr;
 	cout << "Add new course" << endl;
-	cr.no = l.tail->data.no + 1;
+	cr.no = lcr.tail->data.no + 1;
 	cout << "Enter Course ID: ";
 	cin >> cr.id;
+	cin.get();
 	cout << "Enter Course Name: ";
-	cin >> cr.name;
+	cin.getline(cr.name, '/n');
 	cout << "Enter Class of Course: ";
 	cin >> cr.classn;
 	cout << "Enter Lecture Account: ";
@@ -925,22 +943,9 @@ void addnewcourse(listcr &l, listst*&lst)
 	cin >> cr.end1.minute;
 	cout << "Enter the room of the Course: ";
 	cin >> cr.room;
-
-
-	//T? ??ng ?i?n danh sách h?c sinh t? l?p sang môn h?c
-	int i = cr.classn[5] - 1;
-	init(cr.liststudent);
-	nodest*pst = new nodest;
-	pst = lst[i].head;
-	while (pst->next == NULL)
-	{
-		insertTail(cr.liststudent, pst);
-		pst = pst->next;
-	}
-
-	nodecr*p = createNode(cr);
-	insertTail(l, p);
-}*/
+	nodecr *p = createNode(cr);
+	insertTail(lcr, p);
+}
 bool Create(const char *path)
 {
 	if (!CreateDirectory(path, NULL))
@@ -954,62 +959,61 @@ void CreateAll()
 	Create("2018 - 2019/Semester 2");
 	Create("2018 - 2019/Semester 3");
 }
-bool loadsemester(const string path, listcr *&lcr, char b[], int i)
+bool loadsemester(const string path, listcr &lcr, char b[], course *&cr, int ii)
 {
 	ifstream fin;
 	fin.open(path);
 	if (fin.fail())
 		return false;
-	course cr;
+	cr = new course[200];
+	ii = 0;
+	init(lcr);
 	fin.getline(b, 200, '\n');
-	for (int i = 0; i < 2; i++)
-	{
-		init(lcr[i]);
-	}
-	while (fin >> cr.no)
+	while (fin >> cr[ii].no)
 	{
 		fin.get();
-		fin.getline(cr.id, 10, ',');
-		fin.getline(cr.name, 100, ',');
-		fin.getline(cr.classn, 7, ',');
-		fin.getline(cr.lecture, 100, ',');
-		fin >> cr.start.day;
+		fin.getline(cr[ii].id, 10, ',');
+		fin.getline(cr[ii].name, 100, ',');
+		fin.getline(cr[ii].classn, 7, ',');
+		fin.getline(cr[ii].lecture, 100, ',');
+		fin >> cr[ii].start.day;
 		fin.ignore();
-		fin >> cr.start.month;
+		fin >> cr[ii].start.month;
 		fin.ignore();
-		fin >> cr.start.year;
+		fin >> cr[ii].start.year;
 		fin.ignore();
-		fin >> cr.end.day;
+		fin >> cr[ii].end.day;
 		fin.ignore();
-		fin >> cr.end.month;
+		fin >> cr[ii].end.month;
 		fin.ignore();
-		fin >> cr.end.year;
+		fin >> cr[ii].end.year;
 		fin.ignore();
-		fin.getline(cr.day, 100, ',');
-		fin >> cr.start1.hour;
+		fin.getline(cr[ii].day, 100, ',');
+		fin >> cr[ii].start1.hour;
 		fin.ignore();
-		fin >> cr.start1.minute;
+		fin >> cr[ii].start1.minute;
 		fin.ignore();
-		fin >> cr.end1.hour;
+		fin >> cr[ii].end1.hour;
 		fin.ignore();
-		fin >> cr.end1.minute;
+		fin >> cr[ii].end1.minute;
 		fin.ignore();
-		fin.getline(cr.room, 10, '\n');
-		nodecr *p = createNode(cr);
-		insertTail(lcr[i], p);
+		fin.getline(cr[ii].room, 10, '\n');
+		nodecr *p = createNode(cr[ii]);
+		insertTail(lcr, p);
+		ii++;
 	}
 	fin.close();
 	return true;
 }
-bool savesemester(const string path, listcr *&lcr, char b[], int i)
+bool savesemester(const string path, listcr &lcr, char b[])
 {
 	ofstream fout;
 	fout.open(path);
-
+	int i = 0;
 	if (fout.fail())
 		return false;
 	fout << b << endl;
-	for (nodecr *p = lcr[i].head; p != NULL; p = p->next)
+	for (nodecr *p = lcr.head; p != NULL; p = p->next)
 	{
 		course cr = p->data;
 		if (cr.no < 0) break;
@@ -1018,38 +1022,44 @@ bool savesemester(const string path, listcr *&lcr, char b[], int i)
 	fout.close();
 	return true;
 }
-bool semester(listcr *&lcr, char b[], int i)
+void checksms()
 {
+
+}
+bool semester(course *&cr, listcr *&lcr, course *&crr)
+{
+	char b[200];
 	int h, k;
+	int check = 0;
+	int ii = 0;
+	int master = 0;
 	string a[3] = { "2018 - 2019/Semester 1/courseS1.csv", "2018 - 2019/Semester 2/courseS2.csv", "2018 - 2019/Semester 3/courseS3.csv" };
 	for (int i = 0; i < 2; i++)
 	{
-		h = loadsemester(a[i], lcr, b, i);
-		k = savesemester(a[i], lcr, b, i);
+		h = loadsemester(a[i], lcr[i], b, cr, ii);
+		for (int cri = 0; cri < lcr[i].tail->data.no; cri++)
+		{
+			crr[master] = cr[cri];
+			master++;
+		}
+		k = savesemester(a[i], lcr[i], b);
 	}
+	cout << crr[1].lecture << endl;
+	cout << crr[40].lecture << endl;
+	cout << crr[120].lecture << endl;
 	if (h == true && k == true)
 		return true;
 	else return false;
 }
-void viewsemester(listcr *&lcr, char b[], int i)
+void viewsemester(course *&cr, listcr *&lcr, course *&crr)
 {
-	semester(lcr, b, i);
+	semester(cr,lcr, crr);
 	cout << "------| SCHOLASTIC 2018 - 2019 |------" << endl;
 	cout << "1: Semester 1" << endl;
 	cout << "2: Semester 2" << endl;
 	cout << "3: Semester 3" << endl;
-	int n;
-	cout << "Enter the semester you want to see: ";
-	cin >> n;
-	cout << endl;
-	for (nodecr *p = lcr[n - 1].head; p != NULL; p = p->next)
-	{
-		course cr = p->data;
-		if (cr.no < 0) break;
-		cout << cr.no << "," << cr.id << "," << cr.name << "," << cr.classn << "," << cr.lecture << "," << cr.start.month << "/" << cr.start.day << "/" << cr.start.year << ',' << cr.end.month << "/" << cr.end.day << "/" << cr.end.year << ',' << cr.day << ',' << cr.start1.hour << ':' << cr.start1.minute << ',' << cr.end1.hour << ':' << cr.end1.minute << ',' << cr.room << endl;
-	}
 }
-void course1menu(listcr *&lcr, char b[], int i)
+void course1menu(listcr *&lcr, int i, course *&cr, course *&crr)
 {
 	cout << "Create/update/delete/view academic years (2018 - 2019) & semesters" << endl;
 	cout << "1: Create" << endl;
@@ -1080,7 +1090,7 @@ void course1menu(listcr *&lcr, char b[], int i)
 	case 4:
 	{
 		system("cls");
-		viewsemester(lcr,b,i);
+		viewsemester(cr, lcr, crr);
 		break;
 	}
 	case 5:
@@ -1092,7 +1102,7 @@ void course1menu(listcr *&lcr, char b[], int i)
 		system("cls");
 		cout << "Incorrect,please enter again! " << endl;
 		system("cls");
-		course1menu(lcr, b, i);
+		course1menu(lcr, i, cr, crr);
 		break;
 	}
 	}
@@ -1147,8 +1157,10 @@ bool importcourse()
 }
 void coursemenu()
 {
-	listcr *lcr =  new listcr[3];
-	char b[100];
+	listcr *lcr = new listcr[100];
+	course *cr = new course[200];
+	course *crr = new course[200];
+	char b[200];
 	int i = 0;
 	cout << "__COURSE__" << endl;
 	cout << "1: Create/update/delete/view academic years (2018 - 2019) & semesters" << endl;
@@ -1171,13 +1183,13 @@ void coursemenu()
 	case 1:
 	{
 		system("cls");
-		course1menu(lcr,b,i);
+		course1menu(lcr,i, cr,crr);
 		break;
 	}
 	case 2:
 	{
 		system("cls");
-		if(semester(lcr, b, i)) cout << "Import Successfull" << endl;
+		if(semester(cr,lcr, crr)) cout << "Import Successfull" << endl;
 		else cout << "Can't load data" << endl;
 		break;
 	}
