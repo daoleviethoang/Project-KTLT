@@ -101,7 +101,7 @@ bool remove_Course(const char * path , Courses &tmp)
 
 void enterCoursesEnd ( Courses &add ){
     cout << "No : ";
-    cin >> add.stt;
+    cin >> add.no;
     cout << "AcademicyearID : ";
     cin >> add.academicyearID;
     cout << "SemestersID : ";
@@ -123,8 +123,8 @@ void enterCoursesEnd ( Courses &add ){
     cout << "Day of week : ";
     cin >> add.day;
     cout << "Start Time : ";
-    cin >> add.startTime.hours;
-    cin >> add.startTime.minute;
+    cin >> add.start1.hour;
+    cin >> add.start.minute;
     cout << "End Time";
     cin >> add.end1.hour;
     cin >> add.end1.minute;
@@ -162,7 +162,7 @@ void addCourses (Courses &a)
         getline (fin,a.courseName,',');
         getline (fin,a.classID,',');
         getline (fin,a.lecture,',');
-        fin >> a.startDate.day;
+        fin >> a.start.day;
         fin.ignore(100, '/');
         fin >> a.start.month;
         fin.ignore(100, '/');
@@ -269,7 +269,7 @@ void enterStudentExist (Courses &edit, int n){
             cout << "Month : ";
             cin >> edit.end.month;
             cout << "Year : ";
-            cin >> edit.ende.year;
+            cin >> edit.end.year;
             break;
         case 8:
             cout << "Day of week : ";
