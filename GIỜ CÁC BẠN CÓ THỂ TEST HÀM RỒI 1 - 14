@@ -42,7 +42,7 @@ struct liststcr
 struct course
 {
 	int no;
-	char id[100];
+	char id[20];
 	char name[100];
 	char classn[100];
 	char lecture[100];
