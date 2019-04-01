@@ -29,7 +29,7 @@ void insertTail(nodeat *&head, att a)
 		current->next = blank;
 	}
 }
-bool loadattendance(const char*file, nodeat *l1, char b[])
+bool loadattendance(const char*file, nodeat *&l1, char b[])
 {
 	ifstream fin;
 	fin.open(file);
@@ -83,7 +83,7 @@ void insertTail(nodeatth *&head, attth a)
 	}
 }
 
-bool loadattendanceth(const char*file, nodeatth *l1th, char b[])
+bool loadattendanceth(const char*file, nodeatth *&l1th, char b[])
 {
 	ifstream fin;
 	fin.open(file);
