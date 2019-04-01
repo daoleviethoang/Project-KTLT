@@ -1,0 +1,59 @@
+struct att {
+	char id[100];
+	int a[11];
+};
+struct nodeat {
+	att data;
+	nodeat*next;
+};
+nodeat*createnodeat(att x)
+{
+	nodeat *p = new nodeat;
+	p->next = NULL;
+	p->data = x;
+	return p;
+}
+void insertTail(nodeat *&head, att a)
+{
+	nodeat *blank = createnodeat(a);
+	nodeat *current = new nodeat;
+	if (head == NULL)
+	{
+		head = blank;
+	}
+	else
+	{
+		current = head;
+		while (current->next != NULL)
+			current = current->next;
+		current->next = blank;
+	}
+}
+bool loadattendance(const char*file, nodeat *l1, char b[])
+{
+	ifstream fin;
+	fin.open(file);
+	if (fin.fail())
+		return false;
+	fin.getline(b, 200, '\n');
+	att a;
+	while (!fin.eof())
+	{
+		fin.getline(a.id, 10, ',');
+		for (int i = 0; i < 11; i++)
+		{
+			fin >> a.a[i];
+			fin.get();
+		}
+
+
+		insertTail(l1, a);
+	}
+}
+void main()
+{
+	nodeat *l1 = new nodeat;
+	l1 = NULL;
+	char b[200];
+	loadattendance("18CLC1-CTT003.csv", l1, b);
+}
