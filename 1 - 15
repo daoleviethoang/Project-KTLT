@@ -42,7 +42,7 @@ struct liststcr
 struct course
 {
 	int no;
-	char id[20];
+	char id[100];
 	char name[100];
 	char classn[100];
 	char lecture[100];
@@ -905,47 +905,6 @@ void viewClassandList(listallst &last, listst *&lst)
 	}
 	else return;
 }
-void addnewcourse(listcr &lcr, listst*&lst, int i)
-{
-	course cr;
-	cout << "Add new course" << endl;
-	cr.no = lcr.tail->data.no + 1;
-	cout << "Enter Course ID: ";
-	cin >> cr.id;
-	cin.get();
-	cout << "Enter Course Name: ";
-	cin.getline(cr.name, '/n');
-	cout << "Enter Class of Course: ";
-	cin >> cr.classn;
-	cout << "Enter Lecture Account: ";
-	cin >> cr.lecture;
-	cout << "Enter Day of Start Date: ";
-	cin >> cr.start.day;
-	cout << "Enter Month of Start Date: ";
-	cin >> cr.start.month;
-	cout << "Enter Year of Start Date: ";
-	cin >> cr.start.year;
-	cout << "Enter Day of End Date: ";
-	cin >> cr.end.day;
-	cout << "Enter Month of End Date: ";
-	cin >> cr.end.month;
-	cout << "Enter Year of End Date: ";
-	cin >> cr.end.year;
-	cout << "Enter the Day of Week the course take: ";
-	cin >> cr.day;
-	cout << "Enter the Start Hour: ";
-	cin >> cr.start1.hour;
-	cout << "Enter the Start Minute: ";
-	cin >> cr.start1.minute;
-	cout << "Enter the End Hour: ";
-	cin >> cr.end1.hour;
-	cout << "Enter the End Minute: ";
-	cin >> cr.end1.minute;
-	cout << "Enter the room of the Course: ";
-	cin >> cr.room;
-	nodecr *p = createNode(cr);
-	insertTail(lcr, p);
-}
 bool Create(const char *path)
 {
 	if (!CreateDirectory(path, NULL))
@@ -1107,9 +1066,8 @@ void course1menu(listcr *&lcr, int i, course *&cr, course *&crr)
 	}
 	}
 }
-bool importcourse()
+bool importcourse(listcr &lcr, char a[])
 {
-	listcr lcr;
 	ofstream fout;
 	ofstream fout1;
 	ofstream fout2;
@@ -1118,12 +1076,10 @@ bool importcourse()
 	fout2.open("2018 - 2019/Semester 3/courseS3.csv");
 	if (fout.fail() && fout1.fail() && fout2.fail())
 		return false;
-	char a[200];
 	int check = 0;
 	int number1 = 1;
 	int number2 = 1;
 	int number3 = 1;
-	loadCourse("Course.csv", lcr, a);
 	fout << a << endl;
 	fout1 << a << endl;
 	fout2 << a << endl;
@@ -1154,6 +1110,47 @@ bool importcourse()
 	}
 	fout.close();
 	return true;
+}
+void addnewcourse(listcr &lcr)
+{
+	course cr;
+	cout << "Add new course" << endl;
+	cr.no = lcr.tail->data.no + 1;
+	cout << "Enter Course ID: ";
+	cin >> cr.id;
+	cin.get();
+	cout << "Enter Course Name: ";
+	cin.getline(cr.name, '/n');
+	cout << "Enter Class of Course: ";
+	cin >> cr.classn;
+	cout << "Enter Lecture Account: ";
+	cin >> cr.lecture;
+	cout << "Enter Day of Start Date: ";
+	cin >> cr.start.day;
+	cout << "Enter Month of Start Date: ";
+	cin >> cr.start.month;
+	cout << "Enter Year of Start Date: ";
+	cin >> cr.start.year;
+	cout << "Enter Day of End Date: ";
+	cin >> cr.end.day;
+	cout << "Enter Month of End Date: ";
+	cin >> cr.end.month;
+	cout << "Enter Year of End Date: ";
+	cin >> cr.end.year;
+	cout << "Enter the Day of Week the course take: ";
+	cin >> cr.day;
+	cout << "Enter the Start Hour: ";
+	cin >> cr.start1.hour;
+	cout << "Enter the Start Minute: ";
+	cin >> cr.start1.minute;
+	cout << "Enter the End Hour: ";
+	cin >> cr.end1.hour;
+	cout << "Enter the End Minute: ";
+	cin >> cr.end1.minute;
+	cout << "Enter the room of the Course: ";
+	cin >> cr.room;
+	nodecr *p = createNode(cr);
+	insertTail(lcr, p);
 }
 void coursemenu()
 {
@@ -1195,6 +1192,12 @@ void coursemenu()
 	}
 	case 3:
 	{
+		system("cls");
+		char a[200];
+		listcr lcr;
+		loadCourse("Course.csv", lcr, a);
+		addnewcourse(lcr);
+		importcourse(lcr, a);
 		break;
 	}
 	case 4:
@@ -1712,7 +1715,10 @@ void main()
 	}
 	else cout << "Can't load data";
 	CreateAll();
-	int zz = importcourse();
+	listcr lcr;
+	char z[200];
+	loadCourse("Course.csv", lcr, z);
+	int zz = importcourse(lcr,z);
 	if (zz) cout << "success" << endl;
 	else cout << "Error" << endl;
 	int  ii = 0;
