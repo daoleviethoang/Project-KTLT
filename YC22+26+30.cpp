@@ -32,14 +32,15 @@ void viewattendance(nodeat *l)
 void viewattendanceth(nodeatth *l)
 {
 	cout << "Practice(0:absent, 1: present)" << endl;
-	cout << "Student ID \t Week 01 \t Week 02 \t Week 03 \t Week 04 \t Week 05 \t Week 06 \t Week 07 \t Week 08 \t Week 09 \t Week 10" << endl;
-	for (nodeatth *p = l; p != NULL; p = p->next)
+	cout << "Student ID  Week 01  Week 02  Week 03  Week 04  Week 05  Week 06  Week 07  Week 08  Week 09  Week 10  Week 11" << endl;
+	for (nodeat *p = l; p != NULL; p = p->next)
 	{
-		cout << p->data.id;
+		cout << p->data.id << "    ";
 		for (int i = 0; i < 10; i++)
 		{
-			cout << "\t" << p->data.a[i];
+			cout << p->data.a[i] << "        ";
 		}
+		cout << endl;
 	}
 }
 nodeat*createnodeat(att x)
