@@ -53,7 +53,7 @@ bool loadattendance(const char*file, nodeat *l1, char b[])
 }
 struct attth {
 	char id[100];
-	int a[11];
+	int a[10];
 };
 struct nodeatth {
 	attth data;
