@@ -3,9 +3,9 @@
 #ifndef _YC16_H_
 #define _YC16_H_
 
+#include "string"
 #include <iostream>
 #include <fstream>
-#include "string"
 #include <cstdlib>
 
 using namespace std;
