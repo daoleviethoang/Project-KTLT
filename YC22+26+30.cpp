@@ -166,11 +166,11 @@ void viewattendancelist()
 			nodeatth *l1th = new nodeatth;
 			l1th = NULL;
 			char bth[200];
-			loadattendanceth("18CLC1-CTT003th.csv", l1th, bth);
+			loadattendanceth("18CLC1-CTT008th.csv", l1th, bth);
 			nodeat *l1 = new nodeat;
 			l1 = NULL;
 			char b[200];
-			loadattendance("18CLC1-CTT003.csv", l1, b);
+			loadattendance("18CLC1-CTT008.csv", l1, b);
 			cout << "The list attendance of Programming Techniques" << endl;
 			viewattendance(l1);
 			viewattendanceth(l1th);
