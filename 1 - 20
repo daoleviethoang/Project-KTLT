@@ -2451,7 +2451,7 @@ void changePassword(listpw &l, char user[50], char password[50])
 	do
 	{
 		cout << "Enter your old password: ";
-		cin >> check;
+		inputpassword(check);
 		if (strcmp(check, password) == 0)
 		{
 			do
@@ -2468,7 +2468,7 @@ void changePassword(listpw &l, char user[50], char password[50])
 						if (strcmp(p->data.user, user) == 0)
 						{
 							strcpy(p->data.pass, a);
-							savePassword("D:/Password.csv", l);
+							savePassword("Password.csv", l);
 							return;
 						}
 						p = p->next;
@@ -2495,32 +2495,36 @@ int login(listpw pw, char y[])
 	} while (temp > 2);
 	do
 	{
-		if (index == 1) cout << "Please, Enter again" << endl;
+		if (index == 1) cout << "Wrong user or password!! Please try again!!" << endl;
 		index = 0;
 		cout << "username: ";
 		cin >> user;
 		cout << "password: ";
 		inputpassword(password);
-		if (temp == 1)
+
+		nodepw *lpw = pw.head;
+		while (lpw != NULL)
 		{
-			nodepw *lpw = pw.head;
-			while (lpw != NULL)
+			if (strcmp(user, lpw->data.user) == 0 && strcmp(password, lpw->data.pass) == 0)
 			{
-				if (strcmp(user, lpw->data.user) == 0 && strcmp(password, lpw->data.pass) == 0)
+				if (temp == 1)
 				{
 					strcpy(y, user);
 					if (user[0] < 'A')
 						return 3;
 					else if (strcmp(user, "admin") == 0)
 						return 1;
-					else
-						return 2;
+					else return 2;
 				}
-				else index = 1;
-				lpw = lpw->next;
+				else if (temp == 2)
+				{
+					changePassword(pw, user, password);
+					return 4;
+				}
 			}
+			else index = 1;
+			lpw = lpw->next;
 		}
-		else changePassword(pw, user, password);
 	} while (index == 1);
 }
 void menu(listallst &last, listst *&lst, listpw &pw, int &i, listallstsave &lasts)
@@ -2556,6 +2560,14 @@ void menu(listallst &last, listst *&lst, listpw &pw, int &i, listallstsave &last
 		{
 			system("cls");
 			studentmenu(pw, y, lst, last, i, lasts);
+		}
+		if (x1 == 4)
+		{
+			system("cls");
+			cout <<"Chang the password successfully"<<endl;
+			cout <<"Have a nice day!!"<<endl;
+			system("pause");
+			exit(0);
 		}
 	}
 	else if (x == 2)
