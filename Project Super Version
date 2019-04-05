@@ -374,6 +374,7 @@ int login(char y[]);
 void outputClass(listallst &last);
 void menu();/////////////////////
 void coursemenu();
+void staffmenu();
 
 void insertTail(listpw &l, nodepw *p)
 {
@@ -2791,7 +2792,8 @@ void coursemenu()
 	}
 	case 12:
 	{
-		return;
+		staffmenu();
+		break;
 	}
 	default:
 	{
@@ -2804,8 +2806,9 @@ void coursemenu()
 	}
 
 }
-void classmenu(listallst &last, listst *&lst, int i, listallstsave &lasts)
+void classmenu(listallst &last, listst *&lst, listallstsave &lasts)
 {
+	int i = 0;
 	cout << "__CLASS__" << endl;
 	cout << "1: Import students of a class" << endl;
 	cout << "2: Add a new student" << endl;
@@ -2837,7 +2840,7 @@ void classmenu(listallst &last, listst *&lst, int i, listallstsave &lasts)
 		if (strcmp(y, "yes") == 0)
 		{
 			system("cls");
-			classmenu(last, lst, i, lasts);
+			classmenu(last, lst, lasts);
 		}
 		else
 		{
@@ -2871,7 +2874,7 @@ void classmenu(listallst &last, listst *&lst, int i, listallstsave &lasts)
 		if (strcmp(y, "yes") == 0)
 		{
 			system("cls");
-			classmenu(last, lst, i, lasts);
+			classmenu(last, lst, lasts);
 		}
 		else
 		{
@@ -2911,7 +2914,7 @@ void classmenu(listallst &last, listst *&lst, int i, listallstsave &lasts)
 		if (strcmp(y, "yes") == 0)
 		{
 			system("cls");
-			classmenu(last, lst, i, lasts);
+			classmenu(last, lst, lasts);
 		}
 		else
 		{
@@ -2932,7 +2935,7 @@ void classmenu(listallst &last, listst *&lst, int i, listallstsave &lasts)
 		if (strcmp(y, "yes") == 0)
 		{
 			system("cls");
-			classmenu(last, lst, i, lasts);
+			classmenu(last, lst, lasts);
 		}
 		else
 		{
@@ -2955,7 +2958,7 @@ void classmenu(listallst &last, listst *&lst, int i, listallstsave &lasts)
 		if (strcmp(y, "yes") == 0)
 		{
 			system("cls");
-			classmenu(last, lst, i, lasts);
+			classmenu(last, lst, lasts);
 		}
 		else
 		{
@@ -2975,7 +2978,7 @@ void classmenu(listallst &last, listst *&lst, int i, listallstsave &lasts)
 		if (strcmp(a, "yes") == 0)
 		{
 			system("cls");
-			classmenu(last, lst, i, lasts);
+			classmenu(last, lst, lasts);
 		}
 
 		else
@@ -2988,7 +2991,8 @@ void classmenu(listallst &last, listst *&lst, int i, listallstsave &lasts)
 	};
 	case 7:
 	{
-		menu();
+		system("cls");
+		staffmenu();
 		break;
 	};
 	default:
@@ -2996,7 +3000,7 @@ void classmenu(listallst &last, listst *&lst, int i, listallstsave &lasts)
 		system("cls");
 		cout << "Incorrect,please enter again! " << endl;
 		system("cls");
-		classmenu(last, lst, i, lasts);
+		classmenu(last, lst, lasts);
 		break;
 	}
 	}
@@ -3167,6 +3171,7 @@ void scoremenu()
 {
 	cout << "1: Search and view scoreboard of a course" << endl;
 	cout << "2: Export a scoreboard to a csv file" << endl;
+	cout << "3: Back" << endl;
 	int s;
 	cout << "Let's choose the function you want: ";
 	cin >> s;
@@ -3224,8 +3229,17 @@ void scoremenu()
 	};
 	case 3:
 	{
+		system("cls");
+		staffmenu();
 		break;
 	};
+	default:
+	{
+		system("cls");
+		cout << "Incorrect,please enter again! " << endl;
+		system("cls");
+		scoremenu();
+	}
 	}
 }
 void seachviewatten(listat &lat, listcr &lcr, listat1 &lat1)
@@ -3400,6 +3414,7 @@ void attenmenu()
 {
 	cout << "1: Search and view attendance list of a course" << endl;
 	cout << "2: Export a attendance list to a csv file" << endl;
+	cout << "3: Back" << endl;
 	int s;
 	cout << "Let's choose the function you want: ";
 	cin >> s;
@@ -3460,12 +3475,30 @@ void attenmenu()
 	};
 	case 3:
 	{
+		system("cls");
+		staffmenu();
 		break;
 	};
+	default:
+	{
+		system("cls");
+		cout << "Incorrect,please enter again! " << endl;
+		system("cls");
+		attenmenu();
+	}
 	}
 }
-void staffmenu(listallst &last, listst *&lst, int i, listallstsave &lasts)
+void staffmenu()
 {
+	int size = listn();
+	listst*lst = new listst[size];
+	for (int i = 0; i < size; i++)
+	{
+		init(lst[i]);
+	}
+	listallst last;
+	listallstsave lasts;
+	int h = loadall(lst, last, lasts);
 	cout << "Staffmenu: " << endl;
 	cout << "1: Class" << endl;
 	cout << "2: Course" << endl;
@@ -3480,7 +3513,7 @@ void staffmenu(listallst &last, listst *&lst, int i, listallstsave &lasts)
 	case 1:
 	{
 		system("cls");
-		classmenu(last, lst, i, lasts);
+		classmenu(last, lst, lasts);
 		break;
 	};
 	case 2:
@@ -3510,14 +3543,15 @@ void staffmenu(listallst &last, listst *&lst, int i, listallstsave &lasts)
 		{
 			system("cls");
 			cout << endl << endl << endl << endl << endl << endl << endl;
-			cout << "                               _____THANK YOU_____" << endl;
-			cout << "                               ___SEE YOU AGAIN___" << endl;
-			_getch();
-			exit(0);
+			cout << "                                       _____THANK YOU_____" << endl;
+			cout << "                                       ___SEE YOU AGAIN___" << endl;
+			Sleep(2000);
+			system("cls");
+			menu();
 		}
 		else
 		{
-			staffmenu(last, lst, i, lasts);
+			staffmenu();
 		}
 		break; 
 	};
@@ -3526,7 +3560,7 @@ void staffmenu(listallst &last, listst *&lst, int i, listallstsave &lasts)
 		system("cls");
 		cout << "Incorrect,please enter again! " << endl;
 		system("cls");
-		staffmenu(last, lst, i, lasts);
+		staffmenu();
 	}
 	}
 }
@@ -4339,10 +4373,10 @@ void lecturermenu(char y[])
 		if (strcmp(y, "yes") == 0)
 		{
 			system("cls");
-			cout << endl << endl << endl << endl << endl << endl << endl;
-			cout << "						                          _____THANK YOU_____" << endl;
-			cout << "							                      ___SEE YOU AGAIN___" << endl;
-			Sleep(3000);
+			cout << endl << endl << endl << endl << endl << endl << endl << endl;
+			cout << "                                              _____THANK YOU_____" << endl;
+			cout << "                                              ___SEE YOU AGAIN___" << endl;
+			Sleep(2000);
 			system("cls");
 			menu();
 		}
@@ -4352,13 +4386,605 @@ void lecturermenu(char y[])
 	{
 		system("cls");
 		cout << "Incorrect,please enter again! " << endl;
-
 		lecturermenu(y);
 	}
 	}
 }
-void studentmenu(char y[], listst *&lst, listallst &last, int i, listallstsave &lasts)
+void checkin(char y[], listcr &lcr, int &cur)
 {
+	{
+		listat lat;
+		listat1 lat1;
+		listallst last;
+		char a[200];
+		int no = 1;
+		char ID[20];
+		int flag = 0;
+		char SID[20];
+		int flagcheck = 0;
+		int k = strlen(y);
+		loadAllStudent(last);
+		int i = 0;
+		char *cla = new char;
+		for (nodeallst *lt = last.head; lt != NULL; lt = lt->next)
+		{
+			if (i == cur)
+			{
+				cla = strtok(lt->data.name, "S");
+				break;
+			}
+			i++;
+		}
+		do
+		{
+			cout << "Enter the Course ID of the course that student " << y << " want to check-in: ";
+			cin >> ID;
+			int str = strlen(ID);
+			for (nodecr *cr = lcr.head; cr != NULL; cr = cr->next)
+			{
+				if (strcmp(cr->data.id, ID) == 0 && strcmp(cr->data.classn, cla) == 0)
+				{
+					cout << "\n           ____________Attendance list of subjects " << cr->data.name << "____________" << endl;
+					flag = 1;
+
+					char a[100] = "2018 - 2019/Semester";
+					if (cr->data.start.day > 1 && cr->data.start.month == 9 && cr->data.start.year == 2018 && cr->data.end.day < 30 && cr->data.end.month == 11 && cr->data.end.year == 2018)
+					{
+						char smt[4] = " 1/";
+						strcat(a, smt);
+					}
+					else if (cr->data.start.day > 1 && cr->data.start.month == 1 && cr->data.start.year == 2019 && cr->data.end.day < 30 && cr->data.end.month == 4 && cr->data.end.year == 2019)
+					{
+						char smt[4] = " 2/";
+						strcat(a, smt);
+					}
+					else
+					{
+						char smt[4] = " 3/";
+						strcat(a, smt);
+					}
+					strcat(a, cla);
+					char to[2] = "-";
+					strcat(a, to);
+					char csv[5] = ".csv";
+					strcat(a, cr->data.id);
+					strcat(a, csv);
+					char b[200];
+					if (ID[str - 1] == 'h' && ID[str - 2] == 't')
+					{
+						loadatprac(a, lat1, b);
+						do
+						{
+							for (nodeat1 *t = lat1.head; t != NULL; t = t->next)
+							{
+								if (strcmp(t->data.id, y) == 0)
+								{
+									flagcheck = 1;
+									cout << "             ___________________Attendance sheet for this student " << t->data.id << "___________________" << endl;
+									cout << "                                        Practice(0:absent, 1: present)" << endl << endl;
+									cout << "Student ID  Week 01  Week 02  Week 03  Week 04  Week 05  Week 06  Week 07  Week 08  Week 09  Week 10" << endl;
+									cout << t->data.id << "  " << t->data.w1 << "  " << t->data.w2 << "  " << t->data.w3 << "  " << t->data.w4 << "  " << t->data.w5 << "  " << t->data.w6 << "  " << t->data.w7 << "  " << t->data.w8 << "  " << t->data.w9 << "  " << t->data.w10 << endl << endl;
+
+									int s = 0;
+									do
+									{
+										cout << "Enter the week you want to check-in: ";
+										cin >> s;
+									} while (s < 0 || s>10);
+									cout << "Check-in (Please enter 0:absent, 1: present)" << endl << endl;
+									switch (s)
+									{
+									case 1:
+									{
+										do
+										{
+											cout << "Week 01: ";
+											cin >> t->data.w1;
+										} while (t->data.w1 < 0 || t->data.w1 > 1);
+										break;
+									}
+									case 2:
+									{
+										do
+										{
+											cout << "Week 02: ";
+											cin >> t->data.w2;
+										} while (t->data.w2 < 0 || t->data.w2 > 1);
+										break;
+									}
+									case 3:
+									{
+										do
+										{
+											cout << "Week 03: ";
+											cin >> t->data.w3;
+										} while (t->data.w3 < 0 || t->data.w3 > 1);
+										break;
+									}
+									case 4:
+									{
+										do
+										{
+											cout << "Week 04: ";
+											cin >> t->data.w4;
+										} while (t->data.w4 < 0 || t->data.w4 > 1);
+										break;
+									}
+									case 5:
+									{
+										do
+										{
+											cout << "Week 05: ";
+											cin >> t->data.w5;
+										} while (t->data.w5 < 0 || t->data.w5 > 1);
+										break;
+									}
+									case 6:
+									{
+										do
+										{
+											cout << "Week 06: ";
+											cin >> t->data.w6;
+										} while (t->data.w6 < 0 || t->data.w6 > 1);
+										break;
+									}
+									case 7:
+									{
+										do
+										{
+											cout << "Week 07: ";
+											cin >> t->data.w7;
+										} while (t->data.w7 < 0 || t->data.w7 > 1);
+										break;
+									}
+									case 8:
+									{
+										do
+										{
+											cout << "Week 08: ";
+											cin >> t->data.w8;
+										} while (t->data.w8 < 0 || t->data.w8 > 1);
+										break;
+									}
+									case 9:
+									{
+										do
+										{
+											cout << "Week 09: ";
+											cin >> t->data.w9;
+										} while (t->data.w9 < 0 || t->data.w9 > 1);
+										break;
+									}
+									case 10:
+									{
+										do
+										{
+											cout << "Week 10: ";
+											cin >> t->data.w10;
+										} while (t->data.w10 < 0 || t->data.w10 > 1);
+										break;
+									}
+									}
+									int qq = saveatprac(a, lat1, b);
+									if (qq) cout << "\nEdit an attendance successfull" << endl;
+									else cout << "\nDon't edit an attendance sucessfull" << endl;
+									return;
+									}
+								}
+						} while (flagcheck == 0 && cout << "Student not found, please re-enter !!!" << endl);
+					}
+					else
+					{
+						loadattheory(a, lat, b);
+						do
+						{
+							for (nodeat *t = lat.head; t != NULL; t = t->next)
+							{
+								if (strcmp(t->data.id, y) == 0)
+								{
+									flagcheck = 1;
+									cout << "             ___________________Attendance sheet for this student " << t->data.id << "___________________" << endl;
+									cout << "                                        Practice(0:absent, 1: present)" << endl << endl;
+									cout << "Student ID  Week 01  Week 02  Week 03  Week 04  Week 05  Week 06  Week 07  Week 08  Week 09  Week 10  Week11" << endl;
+									cout << t->data.id << "  " << t->data.w1 << "  " << t->data.w2 << "  " << t->data.w3 << "  " << t->data.w4 << "  " << t->data.w5 << "  " << t->data.w6 << "  " << t->data.w7 << "  " << t->data.w8 << "  " << t->data.w9 << "  " << t->data.w10 << "  " << t->data.w11 << endl << endl;
+
+									int s = 0;
+									do
+									{
+										cout << "Enter the week you want to check-in: ";
+										cin >> s;
+									} while (s < 0 || s>11);
+									cout << "\nCheck-in (Please enter 0:absent, 1: present)" << endl;
+									switch (s)
+									{
+									case 1:
+									{
+										do
+										{
+											cout << "Week 01: ";
+											cin >> t->data.w1;
+										} while (t->data.w1 < 0 || t->data.w1 > 1);
+										break;
+									}
+									case 2:
+									{
+										do
+										{
+											cout << "Week 02: ";
+											cin >> t->data.w2;
+										} while (t->data.w2 < 0 || t->data.w2 > 1);
+										break;
+									}
+									case 3:
+									{
+										do
+										{
+											cout << "Week 03: ";
+											cin >> t->data.w3;
+										} while (t->data.w3 < 0 || t->data.w3 > 1);
+										break;
+									}
+									case 4:
+									{
+										do
+										{
+											cout << "Week 04: ";
+											cin >> t->data.w4;
+										} while (t->data.w4 < 0 || t->data.w4 > 1);
+										break;
+									}
+									case 5:
+									{
+										do
+										{
+											cout << "Week 05: ";
+											cin >> t->data.w5;
+										} while (t->data.w5 < 0 || t->data.w5 > 1);
+										break;
+									}
+									case 6:
+									{
+										do
+										{
+											cout << "Week 06: ";
+											cin >> t->data.w6;
+										} while (t->data.w6 < 0 || t->data.w6 > 1);
+										break;
+									}
+									case 7:
+									{
+										do
+										{
+											cout << "Week 07: ";
+											cin >> t->data.w7;
+										} while (t->data.w7 < 0 || t->data.w7 > 1);
+										break;
+									}
+									case 8:
+									{
+										do
+										{
+											cout << "Week 08: ";
+											cin >> t->data.w8;
+										} while (t->data.w8 < 0 || t->data.w8 > 1);
+										break;
+									}
+									case 9:
+									{
+										do
+										{
+											cout << "Week 09: ";
+											cin >> t->data.w9;
+										} while (t->data.w9 < 0 || t->data.w9 > 1);
+										break;
+									}
+									case 10:
+									{
+										do
+										{
+											cout << "Week 10: ";
+											cin >> t->data.w10;
+										} while (t->data.w10 < 0 || t->data.w10 > 1);
+										break;
+									}
+									case 11:
+									{
+										do
+										{
+											cout << "Week 11: ";
+											cin >> t->data.w11;
+										} while (t->data.w11 < 0 || t->data.w11 > 1);
+										break;
+									}
+									}
+									int qq = saveattheory(a, lat, b);
+									if (qq) cout << "\nEdit an attendance successfull" << endl;
+									else cout << "\nDon't edit an attendance sucessfull" << endl;
+									return;
+								}
+							}
+						} while (flagcheck == 0 && cout << "Student not found, please re-enter !!!" << endl);
+					}
+				}
+			}
+		}while (flag == 0 && cout << "Teachers don't teach this class, please repeat" << endl);
+		return;
+	}
+}
+void viewcheckin(char y[], listcr &lcr, int &cur)
+{
+	{
+		listat lat;
+		listat1 lat1;
+		listallst last;
+		char a[200];
+		int no = 1;
+		char ID[20];
+		int flag = 0;
+		char SID[20];
+		int flagcheck = 0;
+		int k = strlen(y);
+		loadAllStudent(last);
+		int i = 0;
+		char *cla = new char;
+		for (nodeallst *lt = last.head; lt != NULL; lt = lt->next)
+		{
+			if (i == cur)
+			{
+				cla = strtok(lt->data.name, "S");
+				break;
+			}
+			i++;
+		}
+		do
+		{
+			cout << "Enter the Course ID of the course that student " << y << " want to check-in: ";
+			cin >> ID;
+			int str = strlen(ID);
+			for (nodecr *cr = lcr.head; cr != NULL; cr = cr->next)
+			{
+				if (strcmp(cr->data.id, ID) == 0 && strcmp(cr->data.classn, cla) == 0)
+				{
+					cout << "\nAttendance list of subjects " << cr->data.name << "" << endl;
+					flag = 1; 
+
+					char a[100] = "2018 - 2019/Semester";
+					if (cr->data.start.day > 1 && cr->data.start.month == 9 && cr->data.start.year == 2018 && cr->data.end.day < 30 && cr->data.end.month == 11 && cr->data.end.year == 2018)
+					{
+						char smt[4] = " 1/";
+						strcat(a, smt);
+					}
+					else if (cr->data.start.day > 1 && cr->data.start.month == 1 && cr->data.start.year == 2019 && cr->data.end.day < 30 && cr->data.end.month == 4 && cr->data.end.year == 2019)
+					{
+						char smt[4] = " 2/";
+						strcat(a, smt);
+					}
+					else
+					{
+						char smt[4] = " 3/";
+						strcat(a, smt);
+					}
+					strcat(a, cla);
+					char to[2] = "-";
+					strcat(a, to);
+					char csv[5] = ".csv";
+					strcat(a, cr->data.id);
+					strcat(a, csv);
+					delete cla;
+					char b[200];
+					if (ID[str - 1] == 'h' && ID[str - 2] == 't')
+					{
+						loadatprac(a, lat1, b);
+						do
+						{
+							for (nodeat1 *t = lat1.head; t != NULL; t = t->next)
+							{
+								if (strcmp(t->data.id, y) == 0)
+								{
+									flagcheck = 1;
+									cout << "             ___________________Attendance sheet for this student " << t->data.id << "___________________" << endl;
+									cout << "                                        Practice(0:absent, 1: present)" << endl << endl;
+									cout << "Student ID  Week 01  Week 02  Week 03  Week 04  Week 05  Week 06  Week 07  Week 08  Week 09  Week 10" << endl;
+									cout << t->data.id << "  " << t->data.w1 << "  " << t->data.w2 << "  " << t->data.w3 << "  " << t->data.w4 << "  " << t->data.w5 << "  " << t->data.w6 << "  " << t->data.w7 << "  " << t->data.w8 << "  " << t->data.w9 << "  " << t->data.w10 << endl << endl;
+									int qq = saveatprac(a, lat1, b);
+									if (qq) cout << "\nEdit an attendance successfull" << endl;
+									else cout << "\nDon't edit an attendance sucessfull" << endl;
+									return;
+								}
+							}
+						} while (flagcheck == 0 && cout << "Student not found, please re-enter !!!" << endl);
+					}
+					else
+					{
+						loadattheory(a, lat, b);
+						do
+						{
+							for (nodeat *t = lat.head; t != NULL; t = t->next)
+							{
+								if (strcmp(t->data.id, y) == 0)
+								{
+									flagcheck = 1;
+									cout << "            ___________________Attendance sheet for this student " << t->data.id << "___________________" << endl;
+									cout << "                                        Practice(0:absent, 1: present)" << endl << endl;
+									cout << "Student ID  Week 01  Week 02  Week 03  Week 04  Week 05  Week 06  Week 07  Week 08  Week 09  Week 10  Week11" << endl;
+									cout << t->data.id << "  " << t->data.w1 << "  " << t->data.w2 << "  " << t->data.w3 << "  " << t->data.w4 << "  " << t->data.w5 << "  " << t->data.w6 << "  " << t->data.w7 << "  " << t->data.w8 << "  " << t->data.w9 << "  " << t->data.w10 << "  " << t->data.w11 << endl << endl;
+									return;
+								}
+							}
+						} while (flagcheck == 0 && cout << "Student not found, please re-enter !!!" << endl);
+					}
+				}
+			}
+		} while (flag == 0 && cout << "Teachers don't teach this class, please repeat" << endl);
+		return;
+	}
+}
+void viewschedu(char y[], listst *&lst, listcr &lcr, int &k, listallst &last)
+{
+	int check = 0;
+	int i = 0;
+	char a[200];
+	int flag = 0;
+	int flagcheck = 0;
+	char *cla = new char;
+	for (nodest *p = lst[k].head; p != NULL; p = p->next)
+	{
+		if (strcmp(y, p->data.id) == 0)
+		{
+			cout << p->data.no << endl << p->data.id
+				<< endl << p->data.lastname << " "
+				<< p->data.firstname << endl << p->data.sex
+				<< endl << p->data.birth.month << "/"
+				<< p->data.birth.day << "/" << p->data.birth.year << endl;
+			check = 1;
+			break;
+		}
+	}
+	for (nodeallst *lt = last.head; lt != NULL; lt = lt->next)
+	{
+		if (i == k)
+		{
+			cla = strtok(lt->data.name, "S");
+			break;
+		}
+		i++;
+	}
+	if (check == 1)
+	{
+		cout << "\n				_________________________SCHEDULES_________________________ "<< endl << endl;
+		cout << "						  ______Schedules semester 1______" << endl;
+		cout << "						          Class: " << cla << "" << endl << endl;
+			for (nodecr *cr = lcr.head; cr != NULL; cr = cr->next)
+			{
+				if (strcmp(cr->data.classn, cla) == 0)
+				{
+
+					flag = 1;
+					int clc = 0;
+					if (cr->data.start.day > 1 && cr->data.start.month == 9 && cr->data.start.year == 2018 && cr->data.end.day < 30 && cr->data.end.month == 11 && cr->data.end.year == 2018)
+					{
+						if (flagcheck == 0)
+						{
+							cout << "Shift      Hours/Days          Monday        Tuesday        Wednesday        Thursday        Friday        Saturday        Sunday" << endl;
+							cout << "	    (LT) 7:30 - 9:10" << endl;
+							cout << "  1     ";
+							flagcheck = 1;
+						}
+							if ((cr->data.start1.hour == 7 && cr->data.start1.minute == 30 && cr->data.end1.hour == 9 && cr->data.end1.minute == 30) || (cr->data.start1.hour == 7 && cr->data.start1.minute == 30 && cr->data.end1.hour == 9 && cr->data.end1.minute == 10))
+							{
+								if (strcmp(cr->data.day, "Monday") == 0 && clc == 0)
+								{
+							cout << "             " << cr->data.id << "-" << cr->data.room;
+								}
+								if (strcmp(cr->data.day, "Tuesday") == 0)
+								{
+							cout << "  " << cr->data.id << "-" << cr->data.room;
+								}
+								if (strcmp(cr->data.day, "Wednesday") == 0)
+								{
+							cout << "     " << cr->data.id << "-" << cr->data.room << "";
+
+								}
+								if (strcmp(cr->data.day, "Thursday") == 0)
+								{
+							cout << "     " << cr->data.id << "-" << cr->data.room << "";
+								}
+								if (strcmp(cr->data.day, "Friday") == 0)
+								{
+							cout << "     " << cr->data.id << "-" << cr->data.room << "";
+								}
+								if (strcmp(cr->data.day, "Saturday") == 0)
+								{
+							cout << "     " << cr->data.id << "-" << cr->data.room << "";
+								}
+							}
+
+						}
+					//else if (cr->data.start.day > 1 && cr->data.start.month == 1 && cr->data.start.year == 2019 && cr->data.end.day < 30 && cr->data.end.month == 4 && cr->data.end.year == 2019)
+				//	{
+					//	char smt[4] = " 2/";
+					//	strcat(a, smt);
+				//	}
+					//else
+					//{
+					//	char smt[4] = " 3/";
+					//	strcat(a, smt);
+					//}
+			}
+		}
+	}
+}
+void viewst4(char y[], listcr &lcr, int &k, listallst &last)
+{
+		char ID[20];
+		int flag = 0;
+		char b[200];
+		char *cla = new char;
+		listsb lsb;
+		int i = 0;
+		for (nodeallst *lt = last.head; lt != NULL; lt = lt->next)
+		{
+			if (i == k)
+			{
+				cla = strtok(lt->data.name, "S");
+				break;
+			}
+			i++;
+		}
+		do
+		{
+			cout << "Enter the Course ID of the course you want to remove a student: ";
+			cin >> ID;
+			for (nodecr *cr = lcr.head; cr != NULL; cr = cr->next)
+			{
+				if (strcmp(cr->data.id, ID) == 0 && strcmp(cr->data.classn, cla) == 0)
+				{
+					flag = 1;
+					cout << "Find the course!!" << endl;
+					char a[100] = "2018 - 2019/Semester";
+					if (cr->data.start.day > 1 && cr->data.start.month == 9 && cr->data.start.year == 2018 && cr->data.end.day < 30 && cr->data.end.month == 11 && cr->data.end.year == 2018)
+					{
+						char smt[4] = " 1/";
+						strcat(a, smt);
+					}
+					else if (cr->data.start.day > 1 && cr->data.start.month == 1 && cr->data.start.year == 2019 && cr->data.end.day < 30 && cr->data.end.month == 4 && cr->data.end.year == 2019)
+					{
+						char smt[4] = " 2/";
+						strcat(a, smt);
+					}
+					else
+					{
+						char smt[4] = " 3/";
+						strcat(a, smt);
+					}
+					strcat(a, cr->data.classn);
+					strcat(a, "-");
+					strcat(a, cr->data.id);
+					strcat(a, "-");
+					strcat(a, "score");
+					strcat(a, ".csv");
+					int val = atoi(y);
+	
+					if (loadscore(a, lsb, b))
+					{
+						cout << "\nView student " << y << " scores of a course" << endl << endl;
+						cout << "Student ID , Midterm , Final , Lab , Bonus" << endl;
+						for (nodesb *p = lsb.head; p != NULL; p = p->next)
+						{
+							if (p->data.ID == val)
+							{
+								cout << p->data.ID << " , " << p->data.midterm << " , " << p->data.final << " , " << p->data.lab << " , " << p->data.bonus << endl;
+							}
+							return;
+						}
+					}
+				}
+			}
+		} while (flag == 0 && cout << "Can't find the course, Please input again!!" << endl);
+}
+void studentmenu(char y[], listst *&lst, listallst &last)
+{
+	int k = 0;
 	int check = 0;
 	for (int i = 0; i < listn(); i++)
 	{
@@ -4372,12 +4998,13 @@ void studentmenu(char y[], listst *&lst, listallst &last, int i, listallstsave &
 					<< endl << p->data.birth.month << "/"
 					<< p->data.birth.day << "/" << p->data.birth.year << endl;
 				check = 1;
+				k = i;
 				break;
 			}
 		}
 		if (check == 1)
 		{
-			cout << "________Student________" << endl;
+			cout << "\n________Student________" << endl;
 			cout << "1: Check-in" << endl;
 			cout << "2: View check-in result" << endl;
 			cout << "3: View schedules" << endl;
@@ -4388,19 +5015,134 @@ void studentmenu(char y[], listst *&lst, listallst &last, int i, listallstsave &
 			cin >> s;
 			switch (s)
 			{
-			case 1: {break; };
-			case 2: {break; };
-			case 3: {break; };
-			case 4: {
-				menu();
-				break; };
+			case 1: 
+			{
+				system("cls");
+				listcr lcr;
+				char a[200];
+				loadCourse("Course.csv", lcr, a);
+				checkin(y, lcr, k);
 
+				cout << endl << endl;
+				char kkk[10];
+				cout << "Do you want to continue ??? (yes/no): ";
+				cin >> kkk;
+				if (strcmp(kkk, "yes") == 0)
+				{
+					system("cls");
+					studentmenu(y, lst, last);
+				}
+				else
+				{
+					cout << "Thanks, See you again !!! \n Click enter to exit !!!" << endl;
+					_getch();
+					exit(0);
+				}
+				break; 
+			};
+			case 2: 
+			{
+				system("cls");
+				listcr lcr;
+				char a[200];
+				loadCourse("Course.csv", lcr, a);
+				viewcheckin(y, lcr, k);
+
+				cout << endl << endl;
+				char kkk[10];
+				cout << "Do you want to continue ??? (yes/no): ";
+				cin >> kkk;
+				if (strcmp(kkk, "yes") == 0)
+				{
+					system("cls");
+					studentmenu(y, lst, last);
+				}
+				else
+				{
+					cout << "Thanks, See you again !!! \n Click enter to exit !!!" << endl;
+					_getch();
+					exit(0);
+				}
+				break; 
+			};
+			case 3: 
+			{
+				system("cls");
+				listcr lcr;
+				char a[200];
+				loadCourse("Course.csv", lcr, a);
+				viewschedu(y,lst, lcr, k, last);
+
+				cout << endl << endl;
+				char kkk[10];
+				cout << "Do you want to continue ??? (yes/no): ";
+				cin >> kkk;
+				if (strcmp(kkk, "yes") == 0)
+				{
+					system("cls");
+					studentmenu(y, lst,last);
+				}
+				else
+				{
+					cout << "Thanks, See you again !!! \n Click enter to exit !!!" << endl;
+					_getch();
+					exit(0);
+				}
+				break; 
+			};
+			case 4: 
+			{
+				system("cls");
+				listcr lcr;
+				char a[200];
+				loadCourse("Course.csv", lcr, a);
+				viewst4(y, lcr, k, last);
+
+				cout << endl << endl;
+				char kkk[10];
+				cout << "Do you want to continue ??? (yes/no): ";
+				cin >> kkk;
+				if (strcmp(kkk, "yes") == 0)
+				{
+					system("cls");
+					studentmenu(y, lst, last);
+				}
+				else
+				{
+					cout << "Thanks, See you again !!! \n Click enter to exit !!!" << endl;
+					_getch();
+					exit(0);
+				}
+				break;
+
+			};
+			case 5:
+			{
+				char y[10];
+				cout << "Do you sure want to logout ??? (yes/no): ";
+				cin >> y;
+				if (strcmp(y, "yes") == 0)
+				{
+					system("cls");
+					cout << endl << endl << endl << endl << endl << endl << endl << endl;
+					cout << "                                  _____THANK YOU_____" << endl;
+					cout << "                                  ___SEE YOU AGAIN___" << endl;
+					Sleep(2000);
+					system("cls");
+					menu();
+				}
+				else
+				{
+					studentmenu(y, lst, last);
+				}
+				break;
+			}
 			default:
 			{
 				system("cls");
 				cout << "Incorrect,please enter again! " << endl;
 
-				studentmenu(y, lst, last, i, lasts);
+				studentmenu(y, lst, last);
 			}
 			}
 			break;
@@ -4527,8 +5269,6 @@ void menu()
 	}
 	listallst last;
 	listallstsave lasts;
-	int iii = 0;
-	int  ii = 0;
 	int h = loadall(lst, last, lasts);
 	cout << "--------------------------------------" << endl;
 	cout << "1: LOGIN" << endl;
@@ -4548,7 +5288,7 @@ void menu()
 			system("cls");
 			char b[100];
 			int k = 0;
-			staffmenu(last, lst, iii, lasts);
+			staffmenu();
 
 		}
 		if (x1 == 2)
@@ -4560,7 +5300,7 @@ void menu()
 		if (x1 == 3)
 		{
 			system("cls");
-			studentmenu(y, lst, last, iii, lasts);
+			studentmenu(y, lst, last);
 		}
 	}
 	else if (x == 2)
