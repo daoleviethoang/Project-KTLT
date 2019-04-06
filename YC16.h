@@ -4,8 +4,8 @@
 #define _YC16_H_
 
 #include "string"
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <cstdlib>
 
 using namespace std;
