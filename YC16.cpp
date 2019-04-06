@@ -1,6 +1,6 @@
 #include "YC16.h"
 //coursesID , academicyearID va semestersID
-bool remove_Course(const char * path , Courses &tmp)
+bool remove_Course(Courses &tmp, const char * path)
 {
     string AcademicyearID ;
     cout << "Remove AcademicyearID : ";
