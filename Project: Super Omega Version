@@ -36,7 +36,7 @@ struct lecturer
 {
 	char name[50];
 	char user[20];
-	char pass[20];
+	char pass[100];
 	char mail[50];
 };
 struct nodelt
@@ -408,6 +408,22 @@ bool loadPassword(const char *path, listpw &l, char b[])
 		insertTail(l, p);
 	}
 	fin.close();
+	return true;
+}
+bool saveTeacher(const char*file, listlt &llt)
+{
+	ofstream fout;
+	fout.open(file);
+	if (fout.fail())
+		return false;
+	fout << "Name, User, Password, Email" << endl;
+	for (nodelt*p = llt.head; p != NULL; p = p->next)
+	{
+		lecturer lt = p->data;
+		if (lt.user < 0) break;
+		fout << lt.name << "," << lt.user << "," << lt.pass << "," << lt.mail << endl;
+	}
+	fout.close();
 	return true;
 }
 bool savePassword(const char *path, listpw &l)
@@ -5427,7 +5443,7 @@ void studentmenu(char y[], listst *&lst, listallst &last)
 		}
 	}
 }
-void changePassword(listpw &l, char user[50], string pass)
+void changePassword(listpw &l, listlt&llt, char user[50], string pass)
 {
 	char check[50];
 	char a[50], b[50];
@@ -5458,11 +5474,23 @@ void changePassword(listpw &l, char user[50], string pass)
 						}
 						p = p->next;
 					}
+					nodelt*lt = llt.head;
+					while (lt != NULL)
+					{
+						if (strcmp(lt->data.user,user) == 0)
+						{
+							strcpy(lt->data.pass, sha256(a).c_str());
+							saveTeacher("Teacher.csv",llt);
+							return;
+						}
+						lt = lt->next;
+					}
 				}
 			} while (a != b);
 		}
 	} while (c != pass && cout << "Wrong!! Please do it again!" << endl);
 }
+
 int login(char y[])
 {
 	listpw pw;
@@ -5510,34 +5538,30 @@ int login(char y[])
 		}
 		for (nodelt *lt = llt.head; lt != NULL; lt = lt->next)
 		{
-			if (strcmp(user, lt->data.user) == 0 && strcmp(password, lt->data.pass) == 0)
+			if (strcmp(user, lt->data.user) == 0 && strcmp(pass.c_str(), lt->data.pass) == 0)
 			{
 				strcpy(y, user);
 				check = 2;
 				break;
 			}
 		}
-		while (lpw != NULL)
+		if (check == 1 || check == 2)
 		{
-			if (check == 1 || check == 2)
+			if (temp == 1)
 			{
-				if (temp == 1)
-				{
-					if (user[0] < 'A')
-						return 3;
-					else if (strcmp(user, "admin") == 0)
-						return 1;
-					else return 2;
-				}
-				else if (temp == 2)
-				{
-					changePassword(pw, user, pass);
-					return 4;
-				}
+				if (user[0] < 'A')
+					return 3;
+				else if (strcmp(user, "admin") == 0)
+					return 1;
+				else return 2;
 			}
-			else index = 1;
-			lpw = lpw->next;
+			else if (temp == 2)
+			{
+				changePassword(pw,llt, user, pass);
+				return 4;
+			}
 		}
+		else index = 1;
 	} while (index == 1);
 }
 
