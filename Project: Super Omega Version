@@ -36,7 +36,7 @@ struct lecturer
 {
 	char name[50];
 	char user[20];
-	char pass[100];
+	char pass[20];
 	char mail[50];
 };
 struct nodelt
@@ -408,22 +408,6 @@ bool loadPassword(const char *path, listpw &l, char b[])
 		insertTail(l, p);
 	}
 	fin.close();
-	return true;
-}
-bool saveTeacher(const char*file, listlt &llt)
-{
-	ofstream fout;
-	fout.open(file);
-	if (fout.fail())
-		return false;
-	fout << "Name, User, Password, Email" << endl;
-	for (nodelt*p = llt.head; p != NULL; p = p->next)
-	{
-		lecturer lt = p->data;
-		if (lt.user < 0) break;
-		fout << lt.name << "," << lt.user << "," << lt.pass << "," << lt.mail << endl;
-	}
-	fout.close();
 	return true;
 }
 bool savePassword(const char *path, listpw &l)
@@ -4866,68 +4850,345 @@ void viewschedu(char y[], listst *&lst, listcr &lcr, int &k, listallst &last)
 		}
 		i++;
 	}
+	string b[6][4][2];
+	for (nodecr *cr = lcr.head; cr != NULL; cr = cr->next)
+	{
+		char c = cr->data.classn[5];
+		if (c != k + 49)
+			continue;
+		if (strcmp(cr->data.day, "Monday") == 0 && cr->data.id[6] == 't' && cr->data.start1.hour == 7)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[0][0][0] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Tuesday") == 0 && cr->data.id[6] == 't' && cr->data.start1.hour == 7)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[1][0][0] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Wednesday") == 0 && cr->data.id[6] == 't' && cr->data.start1.hour == 7)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[2][0][0] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Thursday") == 0 && cr->data.id[6] == 't' && cr->data.start1.hour == 7)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[3][0][0] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Friday") == 0 && cr->data.id[6] == 't' && cr->data.start1.hour == 7)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[4][0][0] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Saturday") == 0 && cr->data.id[6] == 't' && cr->data.start1.hour == 7)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[5][0][0] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Monday") == 0 && cr->data.id[6] == '\0' && cr->data.start1.hour == 7)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[0][0][1] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Tuesday") ==0 && cr->data.id[6] == '\0' && cr->data.start1.hour == 7)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[1][0][1] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Wednesday")==0 && cr->data.id[6] == '\0' && cr->data.start1.hour == 7)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[2][0][1] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Thursday")==0 && cr->data.id[6] == '\0' && cr->data.start1.hour == 7)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[3][0][1] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Friday")==0 && cr->data.id[6] == '\0' && cr->data.start1.hour == 7)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[4][0][1] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Saturday")==0 && cr->data.id[6] == '\0' && cr->data.start1.hour == 7)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[5][0][1] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Monday")==0 && cr->data.id[6] == 't' && cr->data.start1.hour == 9)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[0][1][0] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Tuesday")==0 && cr->data.id[6] == 't' && cr->data.start1.hour == 9)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[1][1][0] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Wednesday")==0 && cr->data.id[6] == 't' && cr->data.start1.hour == 9)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[2][1][0] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Thursday")==0 && cr->data.id[6] == 't' && cr->data.start1.hour == 9)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[3][1][0] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Friday")==0 && cr->data.id[6] == 't' && cr->data.start1.hour == 9)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[4][1][0] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Saturday")==0 && cr->data.id[6] == 't' && cr->data.start1.hour == 9)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[5][1][0] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Monday")==0 && cr->data.id[6] == '\0' && cr->data.start1.hour == 9)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[0][1][1] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Tuesday")==0 && cr->data.id[6] == '\0' && cr->data.start1.hour == 9)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[1][1][1] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Wednesday")==0 && cr->data.id[6] == '\0' && cr->data.start1.hour == 9)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[2][1][1] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Thursday")==0 && cr->data.id[6] == '\0' && cr->data.start1.hour == 9)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[3][1][1] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Friday")==0 && cr->data.id[6] == '\0' && cr->data.start1.hour == 9)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[4][1][1] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Saturday")==0 && cr->data.id[6] == '\0' && cr->data.start1.hour == 9)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[5][1][1] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Monday")==0 && cr->data.id[6] == 't' && cr->data.start1.hour == 13)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[0][2][0] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Tuesday")==0 && cr->data.id[6] == 't' && cr->data.start1.hour == 13)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[1][2][0] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Wednesday")==0 && cr->data.id[6] == 't' && cr->data.start1.hour == 13)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[2][2][0] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Thursday")==0 && cr->data.id[6] == 't' && cr->data.start1.hour == 13)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[3][2][0] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Friday")==0 && cr->data.id[6] == 't' && cr->data.start1.hour == 13)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[4][2][0] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Saturday")==0 && cr->data.id[6] == 't' && cr->data.start1.hour == 13)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[5][2][0] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Monday")==0 && cr->data.id[6] == '\0' && cr->data.start1.hour == 13)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[0][2][1] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Tuesday")==0 && cr->data.id[6] == '\0' && cr->data.start1.hour == 13)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[1][2][1] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Wednesday")==0 && cr->data.id[6] == '\0' && cr->data.start1.hour == 13)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[2][2][1] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Thursday")==0 && cr->data.id[6] == '\0' && cr->data.start1.hour == 13)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[3][2][1] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Friday")==0 && cr->data.id[6] == '\0' && cr->data.start1.hour == 13)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[4][2][1] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Saturday")==0 && cr->data.id[6] == '\0' && cr->data.start1.hour == 13)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[5][2][1] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Monday")==0 && cr->data.id[6] == 't' && cr->data.start1.hour == 15)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[0][3][0] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Tuesday")==0 && cr->data.id[6] == 't' && cr->data.start1.hour == 15)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[1][3][0] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Wednesday")==0 && cr->data.id[6] == 't' && cr->data.start1.hour == 15)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[2][3][0] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Thursday")==0 && cr->data.id[6] == 't' && cr->data.start1.hour == 15)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[3][3][0] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Friday")==0 && cr->data.id[6] == 't' && cr->data.start1.hour == 15)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[4][3][0] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Saturday")==0 && cr->data.id[6] == 't' && cr->data.start1.hour == 15)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[5][3][0] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Monday")==0 && cr->data.id[6] == '\0' && cr->data.start1.hour == 15)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[0][3][1] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Tuesday")==0 && cr->data.id[6] == '\0' && cr->data.start1.hour == 15)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[1][3][1] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Wednesday")==0 && cr->data.id[6] == '\0' && cr->data.start1.hour == 15)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[2][3][1] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Thursday")==0 && cr->data.id[6] == '\0' && cr->data.start1.hour == 15)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[3][3][1] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Friday")==0 && cr->data.id[6] == '\0' && cr->data.start1.hour == 15)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[4][3][1] = name + '-' + room;
+		}
+		if (strcmp(cr->data.day, "Saturday")==0 && cr->data.id[6] == '\0' && cr->data.start1.hour == 15)
+		{
+			string name = &cr->data.id[0];
+			string room = &cr->data.room[0];
+			b[5][3][1] = name + '-' + room;
+		}
+	}
 	if (check == 1)
 	{
 		cout << "\n				_________________________SCHEDULES_________________________ " << endl << endl;
-		cout << "						  ______Schedules semester 1______" << endl;
 		cout << "						          Class: " << cla << "" << endl << endl;
-		for (nodecr *cr = lcr.head; cr != NULL; cr = cr->next)
+	}
+	cout << "Shift     Monday        Tuesday        Wednesday        Thursday        Friday        Saturday" << endl;
+	for (int j = 0; j < 4; j++)
+	{
+		for (int i = 1; i >= 0; i--)
 		{
-			if (strcmp(cr->data.classn, cla) == 0)
+			if (i == 0)
+				cout << "TH:      ";
+			else
+				cout << "LT:    ";
+			for (int k = 0; k < 6; k++)
 			{
-
-				flag = 1;
-				int clc = 0;
-				if (cr->data.start.day > 1 && cr->data.start.month == 9 && cr->data.start.year == 2018 && cr->data.end.day < 30 && cr->data.end.month == 11 && cr->data.end.year == 2018)
+				if (b[k][j][i] != "")
 				{
-					if (flagcheck == 0)
+					if (i == 0)
 					{
-						cout << "Shift      Hours/Days          Monday        Tuesday        Wednesday        Thursday        Friday        Saturday        Sunday" << endl;
-						cout << "	    (LT) 7:30 - 9:10" << endl;
-						cout << "  1     ";
-						flagcheck = 1;
+						cout << b[k][j][i];
+						for (int h = 0; h < 15 - b[k][j][i].size(); h++)
+							cout << " ";
 					}
-					if ((cr->data.start1.hour == 7 && cr->data.start1.minute == 30 && cr->data.end1.hour == 9 && cr->data.end1.minute == 30) || (cr->data.start1.hour == 7 && cr->data.start1.minute == 30 && cr->data.end1.hour == 9 && cr->data.end1.minute == 10))
+					else
 					{
-						if (strcmp(cr->data.day, "Monday") == 0 && clc == 0)
-						{
-							cout << "             " << cr->data.id << "-" << cr->data.room;
-						}
-						if (strcmp(cr->data.day, "Tuesday") == 0)
-						{
-							cout << "  " << cr->data.id << "-" << cr->data.room;
-						}
-						if (strcmp(cr->data.day, "Wednesday") == 0)
-						{
-							cout << "     " << cr->data.id << "-" << cr->data.room << "";
-
-						}
-						if (strcmp(cr->data.day, "Thursday") == 0)
-						{
-							cout << "     " << cr->data.id << "-" << cr->data.room << "";
-						}
-						if (strcmp(cr->data.day, "Friday") == 0)
-						{
-							cout << "     " << cr->data.id << "-" << cr->data.room << "";
-						}
-						if (strcmp(cr->data.day, "Saturday") == 0)
-						{
-							cout << "     " << cr->data.id << "-" << cr->data.room << "";
-						}
+						cout << b[k][j][i];
+						for (int h = 0; h < 16 - b[k][j][i].size(); h++)
+							cout << " ";
 					}
-
 				}
-				//else if (cr->data.start.day > 1 && cr->data.start.month == 1 && cr->data.start.year == 2019 && cr->data.end.day < 30 && cr->data.end.month == 4 && cr->data.end.year == 2019)
-			//	{
-				//	char smt[4] = " 2/";
-				//	strcat(a, smt);
-			//	}
-				//else
-				//{
-				//	char smt[4] = " 3/";
-				//	strcat(a, smt);
-				//}
+				else
+				{
+					if (i == 0)
+					{
+						for (int h = 0; h < 15; h++)
+							cout << " ";
+					}
+					else
+						for (int h = 0; h < 16; h++)
+							cout << " ";
+				}
 			}
+			cout << endl;
 		}
 	}
 }
@@ -5166,7 +5427,7 @@ void studentmenu(char y[], listst *&lst, listallst &last)
 		}
 	}
 }
-void changePassword(listpw &l, listlt&llt, char user[50], string pass)
+void changePassword(listpw &l, char user[50], string pass)
 {
 	char check[50];
 	char a[50], b[50];
@@ -5196,17 +5457,6 @@ void changePassword(listpw &l, listlt&llt, char user[50], string pass)
 							return;
 						}
 						p = p->next;
-					}
-					nodelt*lt = llt.head;
-					while (lt != NULL)
-					{
-						if (strcmp(lt->data.user,user) == 0)
-						{
-							strcpy(lt->data.pass, sha256(a).c_str());
-							saveTeacher("Teacher.csv",llt);
-							return;
-						}
-						lt = lt->next;
 					}
 				}
 			} while (a != b);
@@ -5260,30 +5510,34 @@ int login(char y[])
 		}
 		for (nodelt *lt = llt.head; lt != NULL; lt = lt->next)
 		{
-			if (strcmp(user, lt->data.user) == 0 && strcmp(pass.c_str(), lt->data.pass) == 0)
+			if (strcmp(user, lt->data.user) == 0 && strcmp(password, lt->data.pass) == 0)
 			{
 				strcpy(y, user);
 				check = 2;
 				break;
 			}
 		}
-		if (check == 1 || check == 2)
+		while (lpw != NULL)
 		{
-			if (temp == 1)
+			if (check == 1 || check == 2)
 			{
-				if (user[0] < 'A')
-					return 3;
-				else if (strcmp(user, "admin") == 0)
-					return 1;
-				else return 2;
+				if (temp == 1)
+				{
+					if (user[0] < 'A')
+						return 3;
+					else if (strcmp(user, "admin") == 0)
+						return 1;
+					else return 2;
+				}
+				else if (temp == 2)
+				{
+					changePassword(pw, user, pass);
+					return 4;
+				}
 			}
-			else if (temp == 2)
-			{
-				changePassword(pw,llt, user, pass);
-				return 4;
-			}
+			else index = 1;
+			lpw = lpw->next;
 		}
-		else index = 1;
 	} while (index == 1);
 }
 
